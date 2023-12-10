@@ -25,6 +25,17 @@ function roteNode(id, graph) {
 export default {
   mounted() {
     const { edges, nodes } = mockData;
+    G6.registerNode('centerNode', {
+      draw: (cfg, group) => {
+        const keyShape = group.addShape('rect', {
+          attrs: {
+            width: 0,
+            height: 0
+          }
+        });
+        return keyShape;
+      }
+    })
     G6.registerNode("test-node", {
       draw: (cfg, group) => {
         const size = [60, 40];
@@ -67,23 +78,6 @@ export default {
       },
     });
 
-    G6.registerEdge(
-      "round-poly",
-      {
-        getControlPoints: (cfg) => {
-          const { startPoint, endPoint } = cfg;
-          return [
-            startPoint,
-            {
-              x: startPoint.x,
-              y: endPoint.y,
-            },
-            endPoint,
-          ];
-        },
-      },
-      "polyline"
-    );
     const graph = new G6.Graph({
       width: document.body.clientWidth,
       height: document.body.clientHeight,
@@ -101,11 +95,6 @@ export default {
       nodes,
       edges,
     });
-    // const ids = ["1-0", "1-1", "1-2", "1-3"];
-    // ids.forEach((id) => {
-    //   roteNode(id, graph);
-    // });
-    // 旋转角度（单位：弧度）
 
     graph.render();
   },
