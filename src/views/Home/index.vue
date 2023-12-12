@@ -36,7 +36,7 @@ export default {
         return keyShape;
       }
     })
-    G6.registerNode("test-node", {
+    G6.registerNode("custom-node", {
       draw: (cfg, group) => {
         const size = [60, 40];
         const keyShape = group.addShape("rect", {
@@ -49,8 +49,9 @@ export default {
             radius: 5,
           },
           draggable: true,
-          name: "level1node-keyshape",
+          name: "custom-node-keyshape",
         });
+        console.log(cfg, 'cfg');
         console.log(keyShape.animate, "ss");
         keyShape.animate((ratio) => {
           // 每一帧的操作，入参 ratio：这一帧的比例值（Number）。返回值：这一帧需要变化的参数集（Object）。
@@ -58,7 +59,7 @@ export default {
           // 当前矩阵
           const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
           // 目标矩阵
-          const toMatrix = G6.Util.transform(matrix, [["r", ratio * Math.PI / 2]]);
+          const toMatrix = G6.Util.transform(matrix, [["r", cfg.deg || Math.PI / 2]]);
           // 返回这一帧需要的参数集，本例中只有目标矩阵
           return {
             matrix: toMatrix,
