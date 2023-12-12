@@ -36,14 +36,13 @@ const modifiedNodes = [
 // 将全部数据分成两组，左右对称排列
 const chunkedData = chunk(originalData, Math.floor(GroupNum / 4));
 
-console.log(chunkedData, "chunkData>>>");
 
 chunkedData.forEach((chopperArr, outerIndex) => {
   switch (outerIndex) {
     case 0:
       // 第一组数据从y轴正轴右侧PI / 6处顺时针旋转
       chopperArr.forEach((choppers, index) => {
-        const length = choppers.length;
+        const length = chopperArr.length;
         const totalDeg = Math.PI / 2 - Math.PI / 6;
         const avgDeg =
           choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
@@ -57,7 +56,7 @@ chunkedData.forEach((chopperArr, outerIndex) => {
           const currentX =
             (innerIndex + 1) * 200 * Math.cos(curDeg) + CenterNodeX;
           const currentY =
-            (innerIndex + 1) * 200 * -Math.sin(curDeg) + CenterNodeY;
+            (innerIndex + 1) * 200 * - Math.sin(curDeg) + CenterNodeY;
           const { id, label } = chopper;
           modifiedNodes.push({
             id,
@@ -70,9 +69,9 @@ chunkedData.forEach((chopperArr, outerIndex) => {
 
       break;
     case 1:
-      // 第一组数据从y轴正轴右侧PI / 6处顺时针旋转
+      // 第二组数据从x轴正轴顺时针旋转
       chopperArr.forEach((choppers, index) => {
-        const length = choppers.length;
+        const length = chopperArr.length;
         const totalDeg = Math.PI / 2 - Math.PI / 6;
         const avgDeg =
           choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
@@ -93,18 +92,20 @@ chunkedData.forEach((chopperArr, outerIndex) => {
       });
       break;
     case 2:
-      // 第一组数据从y轴正轴右侧PI / 6处顺时针旋转
+      // 第三组数据从y轴负轴左侧PI / 6处顺时针旋转
       chopperArr.forEach((choppers, index) => {
-        const length = choppers.length;
+        const length = chopperArr.length;
         const totalDeg = Math.PI / 2 - Math.PI / 6;
         const avgDeg =
           choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
-        const curDeg = index === length - 1 ? totalDeg : (index + 1) * avgDeg;
+        const curDeg = index === length - 1 ? Math.PI : index === 0 ? (Math.PI / 6 + Math.PI / 2) : (index + 1) * avgDeg + Math.PI / 2;
         choppers.forEach((chopper, innerIndex) => {
           const currentX =
-            (innerIndex + 1) * 200 * - Math.cos(curDeg) + CenterNodeX;
+            (innerIndex + 1) * 200 *  Math.cos(curDeg) + CenterNodeX;
           const currentY =
             (innerIndex + 1) * 200 * Math.sin(curDeg) + CenterNodeY;
+          console.log(currentX, 'currentX', currentY, curDeg, Math.sin(curDeg));
+
           const { id, label } = chopper;
           modifiedNodes.push({
             id,
@@ -116,9 +117,9 @@ chunkedData.forEach((chopperArr, outerIndex) => {
       });
       break;
     case 3:
-      // 第一组数据从y轴正轴右侧PI / 6处顺时针旋转
+      // 第一组数据从x轴负轴顺时针旋转
       chopperArr.forEach((choppers, index) => {
-        const length = choppers.length;
+        const length = chopperArr.length;
         const totalDeg = Math.PI / 2 - Math.PI / 6;
         const avgDeg =
           choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
