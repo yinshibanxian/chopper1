@@ -25,17 +25,17 @@ function roteNode(id, graph) {
 export default {
   mounted() {
     const { edges, nodes } = mockData;
-    G6.registerNode('centerNode', {
+    G6.registerNode("centerNode", {
       draw: (cfg, group) => {
-        const keyShape = group.addShape('rect', {
+        const keyShape = group.addShape("rect", {
           attrs: {
             width: 0,
-            height: 0
-          }
+            height: 0,
+          },
         });
         return keyShape;
-      }
-    })
+      },
+    });
     G6.registerNode("custom-node", {
       draw: (cfg, group) => {
         const size = [60, 40];
@@ -47,28 +47,67 @@ export default {
             y: -size[1] / 2,
             fill: "rgb(213, 225, 247)",
             radius: 5,
+            text: cfg.label,
           },
           draggable: true,
           name: "custom-node-keyshape",
         });
-        console.log(cfg, 'cfg');
-        console.log(keyShape.animate, "ss");
-        keyShape.animate((ratio) => {
-          // 每一帧的操作，入参 ratio：这一帧的比例值（Number）。返回值：这一帧需要变化的参数集（Object）。
-          // 旋转通过矩阵来实现
-          // 当前矩阵
-          const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-          // 目标矩阵
-          const toMatrix = G6.Util.transform(matrix, [["r", cfg.deg || Math.PI / 2]]);
-          // 返回这一帧需要的参数集，本例中只有目标矩阵
-          return {
-            matrix: toMatrix,
-          };
-        }, {
-          repeat: false,
-          duration: 1000,
-          easing: 'easeCubic',
+        const textShape = group.addShape("text", {
+          attrs: {
+            text: cfg.label,
+            fill: "red",
+            x: 0,
+            y: 0,
+            fontWeight: 400,
+            textAlign: 'center',
+            fontSize: 10
+          },
+          name: "text-shape",
         });
+
+        // textShape.animate(
+        //   (ratio) => {
+        //     // 每一帧的操作，入参 ratio：这一帧的比例值（Number）。返回值：这一帧需要变化的参数集（Object）。
+        //     // 旋转通过矩阵来实现
+        //     // 当前矩阵
+        //     const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+        //     // 目标矩阵
+        //     const toMatrix = G6.Util.transform(matrix, [
+        //       ["r",  0],
+        //     ]);
+        //     // 返回这一帧需要的参数集，本例中只有目标矩阵
+        //     return {
+        //       matrix: toMatrix,
+        //     };
+        //   },
+        //   {
+        //     repeat: false,
+        //     duration: 1000,
+        //     easing: "easeCubic",
+        //   }
+        // )
+
+        keyShape.animate(
+          (ratio) => {
+            // 每一帧的操作，入参 ratio：这一帧的比例值（Number）。返回值：这一帧需要变化的参数集（Object）。
+            // 旋转通过矩阵来实现
+            // 当前矩阵
+            const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+            // 目标矩阵
+            const toMatrix = G6.Util.transform(matrix, [
+              ["r", cfg.deg || Math.PI / 2],
+            ]);
+            // 返回这一帧需要的参数集，本例中只有目标矩阵
+            return {
+              matrix: toMatrix,
+            };
+          },
+          {
+            repeat: false,
+            duration: 1000,
+            easing: "easeCubic",
+          }
+        );
         return keyShape;
       },
       getAnchorPoints: () => {
@@ -97,8 +136,19 @@ export default {
       edges,
     });
 
+    graph.on('node:click', this.handleNodeClick)
+
     graph.render();
   },
+  methods: {
+    handleNodeClick(evt) {
+      const id = evt.item._cfg.id;
+      this.$router.push({
+        path: '/chopper-detail',
+        query: { id }
+      })
+    }
+  }
 };
 </script>
 

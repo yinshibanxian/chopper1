@@ -52,9 +52,21 @@ export const constantRoutes = [
       name: 'Dashboard',
       component: () => import('@/views/Home/index'),
       meta: { title: '首页', icon: 'dashboard' }
-    }]
+    }
+  ]
   },
-
+  {
+    path: '/chopper',
+    component: Layout,
+    redirect: 'chopper-detail',
+    children: [
+      {
+        path: '/chopper-detail',
+        name: 'chopper detail',
+        component: () => import('@/views/Detail/index')
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,
