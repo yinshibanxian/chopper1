@@ -7,8 +7,8 @@ const StatusColorMap = {
 
 const GroupNum = 20;
 const centerNodeId = "centerNode";
-const CenterNodeX = 0;
-const CenterNodeY = 0;
+const CenterNodeX = document.body.clientWidth / 2;
+const CenterNodeY = document.body.clientHeight / 2;
 
 const originalData = new Array(GroupNum).fill(1).map((_item, outerIndex) => {
   return new Array(4).fill(1).map((_index, innerIndex) => {
