@@ -1,10 +1,17 @@
 <template>
-  <div id="container"></div>
+  <div class="content" id="home-content">
+    <div class="title-wrapper">
+      <div class="english-title">Layout of neutron chopper system for CSNS</div>
+      <div class="cn-title">| CSNS中子斩波器系统布局图</div>
+    </div>
+    <div id="container"></div>
+  </div>
 </template>
 
 <script>
 import G6 from "@antv/g6";
 import mockData from "@/mock/chopper";
+const firstNodeName = "first-node";
 export default {
   mounted() {
     const { edges, nodes } = mockData;
@@ -14,11 +21,43 @@ export default {
           attrs: {
             width: 0,
             height: 0,
+            shadowColor: "red",
           },
         });
         return keyShape;
       },
     });
+
+    G6.registerNode("first-node", {
+      draw: (cfg, group) => {
+        const keyShape = group.addShape("circle", {
+          attrs: {
+            x: 0,
+            y: 0,
+            r: 10,
+            fill: "green",
+            stroke: 'white',
+            lineWidth: 1
+          },
+          name: "first-node-shape",
+        });
+
+        group.addShape('text', {
+          attrs: {
+            x: 0,
+            y: 0,
+            text: cfg.label,
+            fill: 'white',
+            fontSize: 12,
+            textAlign: 'center',
+            textBaseline: 'middle',
+          },
+          name: 'first-node-text'
+        })
+        return keyShape;
+      },
+    });
+
     G6.registerNode("custom-node", {
       draw: (cfg, group) => {
         const size = [60, 40];
@@ -42,8 +81,8 @@ export default {
             x: 0,
             y: 0,
             fontWeight: 400,
-            textAlign: 'center',
-            fontSize: 10
+            textAlign: "center",
+            fontSize: 10,
           },
           name: "text-shape",
         });
@@ -56,7 +95,7 @@ export default {
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
             const toMatrix = G6.Util.transform(matrix, [
-              ["r",  cfg.deg || Math.PI / 2],
+              ["r", cfg.deg || Math.PI / 2],
             ]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
@@ -68,7 +107,7 @@ export default {
             duration: 1000,
             easing: "easeCubic",
           }
-        )
+        );
 
         keyShape.animate(
           (ratio) => {
@@ -101,6 +140,24 @@ export default {
       },
     });
 
+
+    G6.registerEdge('custom-edge', {
+      draw(cfg, group) {
+        console.log(cfg, 'cfg');
+        const { startPoint, endPoint } = cfg;
+        const keyShape = group.addShape('line', {
+          attrs: {
+            x1: startPoint.x,
+            y1: startPoint.y,
+            x2: endPoint.x,
+            y2: endPoint.y,
+            stroke: 'green',
+            lineWidth: 1
+          }
+        });
+        return keyShape;
+      }
+    })
     const graph = new G6.Graph({
       width: document.body.clientWidth,
       height: document.body.clientHeight,
@@ -120,7 +177,7 @@ export default {
       edges,
     });
 
-    graph.on('node:click', this.handleNodeClick)
+    graph.on("node:click", this.handleNodeClick);
 
     graph.render();
   },
@@ -128,13 +185,32 @@ export default {
     handleNodeClick(evt) {
       const id = evt.item._cfg.id;
       this.$router.push({
-        path: '/chopper-detail',
-        query: { id }
-      })
-    }
-  }
+        path: "/chopper-detail",
+        query: { id },
+      });
+    },
+  },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.content {
+  background: rgba(77, 102, 165, 1);
+  height: 100%;
+  width: 100%;
+  .title-wrapper {
+    color: #fff;
+    line-height: 30px;
+    padding-left: 28px;
+    padding-top: 30px;
+    .english-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .cn-title {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
 </style>

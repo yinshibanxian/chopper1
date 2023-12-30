@@ -15,9 +15,18 @@ const originalData = new Array(GroupNum).fill(1).map((_item, outerIndex) => {
     return {
       id: `${outerIndex}-${innerIndex}`,
       label: `斩波器${outerIndex + 1}-${innerIndex + 1}`,
+      status: 1
     };
   });
 });
+
+// const originData = [
+//   [
+//     {
+//       id: ''
+//     }
+//   ]
+// ];
 
 const modifiedNodes = [
   {
@@ -62,8 +71,8 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             id,
             x: currentX,
             y: currentY,
-            label,
-            type: 'custom-node',
+            label: innerIndex === 0 ? index : label,
+            type: innerIndex === 0 ? 'first-node' : 'custom-node',
             deg: Math.PI - curDeg
           });
         });
@@ -88,8 +97,8 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             id,
             x: currentX,
             y: currentY,
-            label,
-            type: 'custom-node',
+            label: innerIndex === 0 ? index : label,
+            type: innerIndex === 0 ? 'first-node' : 'custom-node',
             deg: curDeg
           });
         });
@@ -114,8 +123,8 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             id,
             x: currentX,
             y: currentY,
-            label,
-            type: 'custom-node',
+            label: innerIndex === 0 ? index : label,
+            type: innerIndex === 0 ? 'first-node' : 'custom-node',
             deg: curDeg
           });
         });
@@ -139,8 +148,8 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             id,
             x: currentX,
             y: currentY,
-            label,
-            type: 'custom-node',
+            label: innerIndex === 0 ? index : label,
+            type: innerIndex === 0 ? 'first-node' : 'custom-node',
             deg: curDeg
           });
         });
@@ -150,12 +159,16 @@ chunkedData.forEach((chopperArr, outerIndex) => {
 });
 
 
+console.log(modifiedNodes, 'modifiedNode')
+
+
 const edges = [];
 
 originalData.forEach((itemArr) => {
   itemArr.forEach((item, index) => {
     if (index === 0) {
       edges.push({
+        type: 'custom-edge',
         source: centerNodeId,
         target: item.id,
         style: {
@@ -168,6 +181,7 @@ originalData.forEach((itemArr) => {
       });
     } else {
       edges.push({
+        type: 'custom-edge',
         source: itemArr[index - 1].id,
         target: item.id,
         // 该边连入 source 点的第 0 个 anchorPoint，
