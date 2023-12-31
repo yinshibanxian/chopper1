@@ -11,12 +11,11 @@
 <script>
 import G6 from "@antv/g6";
 import mockData from "@/mock/chopper";
-const firstNodeName = "first-node";
 export default {
   mounted() {
     const { edges, nodes } = mockData;
     G6.registerNode("centerNode", {
-      draw: (cfg, group) => {
+      draw: (_cfg, group) => {
         const keyShape = group.addShape("rect", {
           attrs: {
             width: 0,
@@ -36,31 +35,38 @@ export default {
             y: 0,
             r: 10,
             fill: "green",
-            stroke: 'white',
-            lineWidth: 1
+            stroke: "white",
+            lineWidth: 1,
           },
           name: "first-node-shape",
         });
 
-        group.addShape('text', {
+        group.addShape("text", {
           attrs: {
             x: 0,
             y: 0,
             text: cfg.label,
-            fill: 'white',
+            fill: "white",
             fontSize: 12,
-            textAlign: 'center',
-            textBaseline: 'middle',
+            textAlign: "center",
+            textBaseline: "middle",
           },
-          name: 'first-node-text'
-        })
+          afterDraw() {
+            // 调整文本到节点中心
+            const bbox = this.getBBox();
+            const labelWidth = bbox.maxX - bbox.minX;
+            this.attr("x", -labelWidth / 2);
+          },
+          name: "first-node-text",
+        });
+
         return keyShape;
       },
     });
 
     G6.registerNode("custom-node", {
       draw: (cfg, group) => {
-        const size = [60, 40];
+        const size = [60, 30];
         const keyShape = group.addShape("rect", {
           attrs: {
             width: size[0],
@@ -68,7 +74,7 @@ export default {
             x: -size[0] / 2,
             y: -size[1] / 2,
             fill: "rgb(213, 225, 247)",
-            radius: 5,
+            radius: 10,
             text: cfg.label,
           },
           draggable: true,
@@ -77,12 +83,21 @@ export default {
         const textShape = group.addShape("text", {
           attrs: {
             text: cfg.label,
-            fill: "red",
+            fill: "white",
             x: 0,
             y: 0,
             fontWeight: 400,
             textAlign: "center",
+            textBaseline: 'middle',
             fontSize: 10,
+          },
+          afterDraw() {
+            // 调整文本到节点中心
+            const bbox = this.getBBox();
+            const labelWidth = bbox.maxX - bbox.minX;
+            const labelHeight = bbox.maxY - bbox.minY;
+            this.attr("x", -labelWidth / 2);
+            this.attr("y", -labelHeight / 2);
           },
           name: "text-shape",
         });
@@ -140,24 +155,23 @@ export default {
       },
     });
 
-
-    G6.registerEdge('custom-edge', {
+    G6.registerEdge("custom-edge", {
       draw(cfg, group) {
-        console.log(cfg, 'cfg');
         const { startPoint, endPoint } = cfg;
-        const keyShape = group.addShape('line', {
+        const keyShape = group.addShape("line", {
           attrs: {
             x1: startPoint.x,
             y1: startPoint.y,
             x2: endPoint.x,
             y2: endPoint.y,
-            stroke: 'green',
-            lineWidth: 1
-          }
+            stroke: "green",
+            lineWidth: 1,
+            lineDash: [4, 4],
+          },
         });
         return keyShape;
-      }
-    })
+      },
+    });
     const graph = new G6.Graph({
       width: document.body.clientWidth,
       height: document.body.clientHeight,

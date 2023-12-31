@@ -14,8 +14,8 @@ const originalData = new Array(GroupNum).fill(1).map((_item, outerIndex) => {
   return new Array(4).fill(1).map((_index, innerIndex) => {
     return {
       id: `${outerIndex}-${innerIndex}`,
-      label: `斩波器${outerIndex + 1}-${innerIndex + 1}`,
-      status: 1
+      label: `T${innerIndex}`,
+      status: 1,
     };
   });
 });
@@ -43,44 +43,72 @@ const modifiedNodes = [
 ];
 
 // 将全部数据分成两组，左右对称排列
-const chunkedData = chunk(originalData, Math.floor(GroupNum / 4));
-
+const chunkedData = chunk(originalData, Math.floor(originalData.length / 2));
 
 chunkedData.forEach((chopperArr, outerIndex) => {
   switch (outerIndex) {
     case 0:
-      // 第一组数据从y轴正轴右侧PI / 6处顺时针旋转
+      // 第一组数据从y轴负轴右侧PI / 6处顺时针旋转
       chopperArr.forEach((choppers, index) => {
         const length = chopperArr.length;
-        const totalDeg = Math.PI / 2 - Math.PI / 6;
-        const avgDeg =
-          choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
+        const totalDeg = (Math.PI / 2 - Math.PI / 6) * 2;
+        const startDeg = -Math.PI / 2 + Math.PI / 6;
+        const endDeg = Math.PI / 2 - Math.PI / 6;
+        const avgDeg = length - 2 > 0 ? totalDeg / (length - 2) : totalDeg;
         const curDeg =
-          index === 0
-            ? totalDeg
-            : index === length - 1
-            ? 0
-            : (length - index) * avgDeg;
+          index === length - 1 ? endDeg : startDeg + index * avgDeg;
+        let edgeDistance;
         choppers.forEach((chopper, innerIndex) => {
+          // 点与点之间的距离
+          edgeDistance = innerIndex === 0 ? 200 : 150;
+          console.log(edgeDistance, 'edgeDistance')
           const currentX =
-            (innerIndex + 1) * 200 * Math.cos(curDeg) + CenterNodeX;
+            (innerIndex + 1) * edgeDistance * Math.cos(curDeg) + CenterNodeX;
           const currentY =
-            (innerIndex + 1) * 200 * - Math.sin(curDeg) + CenterNodeY;
+            (innerIndex + 1) * edgeDistance * -Math.sin(curDeg) + CenterNodeY;
           const { id, label } = chopper;
           modifiedNodes.push({
             id,
             x: currentX,
             y: currentY,
-            label: innerIndex === 0 ? index : label,
-            type: innerIndex === 0 ? 'first-node' : 'custom-node',
-            deg: Math.PI - curDeg
+            label: innerIndex === 0 ? index + 1 : label,
+            type: innerIndex === 0 ? "first-node" : "custom-node",
+            deg: Math.PI - curDeg,
           });
         });
       });
-
       break;
     case 1:
-      // 第二组数据从x轴正轴顺时针旋转
+      // 第二组数据从y轴正轴顺时针旋转
+      chopperArr.forEach((choppers, index) => {
+        const length = chopperArr.length;
+        const totalDeg = (Math.PI / 2 - Math.PI / 6) * 2;
+        const startDeg = Math.PI / 2 + Math.PI / 6;
+        const endDeg = (2 * Math.PI * 3) / 4 - Math.PI / 6;
+        const avgDeg = totalDeg / (length - 2);
+        const curDeg =
+          index === length - 1 ? endDeg : startDeg + index * avgDeg;
+        // 点与点之间的距离
+        let edgeDistance;
+        choppers.forEach((chopper, innerIndex) => {
+          edgeDistance = innerIndex === 0 ? 200 : 150;
+          const currentX =
+            (innerIndex + 1) * edgeDistance * Math.cos(curDeg) + CenterNodeX;
+          const currentY =
+            (innerIndex + 1) * edgeDistance * -Math.sin(curDeg) + CenterNodeY;
+          const { id, label } = chopper;
+          modifiedNodes.push({
+            id,
+            x: currentX,
+            y: currentY,
+            label: innerIndex === 0 ? index + chunkedData[0].length + 1 : label,
+            type: innerIndex === 0 ? "first-node" : "custom-node",
+            deg: Math.PI - curDeg,
+          });
+        });
+      });
+      break;
+      // 第一组数据从x轴负轴顺时针旋转
       chopperArr.forEach((choppers, index) => {
         const length = chopperArr.length;
         const totalDeg = Math.PI / 2 - Math.PI / 6;
@@ -89,68 +117,17 @@ chunkedData.forEach((chopperArr, outerIndex) => {
         const curDeg = index === length - 1 ? totalDeg : (index + 1) * avgDeg;
         choppers.forEach((chopper, innerIndex) => {
           const currentX =
-            (innerIndex + 1) * 200 * Math.cos(curDeg) + CenterNodeX;
+            (innerIndex + 1) * 200 * -Math.cos(curDeg) + CenterNodeX;
           const currentY =
-            (innerIndex + 1) * 200 * Math.sin(curDeg) + CenterNodeY;
+            (innerIndex + 1) * 200 * -Math.sin(curDeg) + CenterNodeY;
           const { id, label } = chopper;
           modifiedNodes.push({
             id,
             x: currentX,
             y: currentY,
             label: innerIndex === 0 ? index : label,
-            type: innerIndex === 0 ? 'first-node' : 'custom-node',
-            deg: curDeg
-          });
-        });
-      });
-      break;
-    case 2:
-      // 第三组数据从y轴负轴左侧PI / 6处顺时针旋转
-      chopperArr.forEach((choppers, index) => {
-        const length = chopperArr.length;
-        const totalDeg = Math.PI / 2 - Math.PI / 6;
-        const avgDeg =
-          choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
-        const curDeg = index === 0 ? (Math.PI / 6 + Math.PI / 2) : index === length - 1 ? Math.PI  : (index + 1) * avgDeg + Math.PI / 2;
-        choppers.forEach((chopper, innerIndex) => {
-          const currentX =
-            (innerIndex + 1) * 200 *  Math.cos(curDeg) + CenterNodeX;
-          const currentY =
-            (innerIndex + 1) * 200 * Math.sin(curDeg) + CenterNodeY;
-
-          const { id, label } = chopper;
-          modifiedNodes.push({
-            id,
-            x: currentX,
-            y: currentY,
-            label: innerIndex === 0 ? index : label,
-            type: innerIndex === 0 ? 'first-node' : 'custom-node',
-            deg: curDeg
-          });
-        });
-      });
-      break;
-    case 3:
-      // 第一组数据从x轴负轴顺时针旋转
-      chopperArr.forEach((choppers, index) => {
-        const length = chopperArr.length;
-        const totalDeg = Math.PI / 2 - Math.PI / 6;
-        const avgDeg =
-          choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
-          const curDeg = index === length - 1 ? totalDeg : (index + 1) * avgDeg;
-        choppers.forEach((chopper, innerIndex) => {
-          const currentX =
-            (innerIndex + 1) * 200 * - Math.cos(curDeg) + CenterNodeX;
-          const currentY =
-            (innerIndex + 1) * 200 * - Math.sin(curDeg) + CenterNodeY;
-          const { id, label } = chopper;
-          modifiedNodes.push({
-            id,
-            x: currentX,
-            y: currentY,
-            label: innerIndex === 0 ? index : label,
-            type: innerIndex === 0 ? 'first-node' : 'custom-node',
-            deg: curDeg
+            type: innerIndex === 0 ? "first-node" : "custom-node",
+            deg: curDeg,
           });
         });
       });
@@ -158,9 +135,7 @@ chunkedData.forEach((chopperArr, outerIndex) => {
   }
 });
 
-
-console.log(modifiedNodes, 'modifiedNode')
-
+console.log(modifiedNodes, 'modifiedNodes')
 
 const edges = [];
 
@@ -168,20 +143,20 @@ originalData.forEach((itemArr) => {
   itemArr.forEach((item, index) => {
     if (index === 0) {
       edges.push({
-        type: 'custom-edge',
+        type: "custom-edge",
         source: centerNodeId,
         target: item.id,
         style: {
-          width: 50,
+          // width: 50,
         },
         // 该边连入 source 点的第 0 个 anchorPoint，
-        sourceAnchor: 0,
-        // 该边连入 target 点的第 0 个 anchorPoint，
-        targetAnchor: 0,
+        // sourceAnchor: 0,
+        // // 该边连入 target 点的第 0 个 anchorPoint，
+        // targetAnchor: 0,
       });
     } else {
       edges.push({
-        type: 'custom-edge',
+        type: "custom-edge",
         source: itemArr[index - 1].id,
         target: item.id,
         // 该边连入 source 点的第 0 个 anchorPoint，
@@ -192,7 +167,6 @@ originalData.forEach((itemArr) => {
     }
   });
 });
-
 
 export default {
   edges: edges,
