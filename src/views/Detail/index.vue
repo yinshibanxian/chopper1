@@ -7,7 +7,11 @@
         <div class="date">
           {{ refreshCurrenTime }}
         </div>
-        <div class="filter"></div>
+        <div class="filter">
+          <el-select placeholder="">
+            <el-option>abc</el-option>
+          </el-select>
+        </div>
         <div class="exit-img"></div>
       </div>
     </div>
@@ -16,6 +20,7 @@
 </template> 
 
 <script>
+import { Select } from "element-ui";
 export default {
   mounted() {
     this.refreshCurrentTimeTimer = setInterval(() => {
@@ -23,9 +28,9 @@ export default {
     }, 1000);
   },
   computed: {
-    refreshCurrenTime: function() {
-      return this.$dayjs(this.currentTime).format('YYYY年MM月DD日 HH:mm:ss');
-    }
+    refreshCurrenTime: function () {
+      return this.$dayjs(this.currentTime).format("YYYY年MM月DD日 HH:mm:ss");
+    },
   },
   beforeDestroy() {
     this.refreshCurrentTimeTimer && clearInterval(this.refreshCurrentTimeTimer);
@@ -33,9 +38,9 @@ export default {
   data() {
     return {
       currentTime: this.$dayjs(),
-      refreshCurrentTimeTimer: null
-    }
-  }
+      refreshCurrentTimeTimer: null,
+    };
+  },
 };
 </script>
 
@@ -48,7 +53,7 @@ $design_height: 1080;
 }
 
 @function px2vh($px) {
-  @return $px / ($design_height / 100 ) + vh;
+  @return $px / ($design_height / 100) + vh;
 }
 .container {
   .header {
@@ -98,6 +103,23 @@ $design_height: 1080;
       padding-right: px2vw(27);
       color: rgba(0, 242, 255, 1);
       font-size: 14px;
+      .filter {
+        background-image: url("../../assets/svgs/detail-header-filter.svg");
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 100% 100%;
+        height: 30px;
+        width: 166px;
+        display: flex;
+        align-items: center;
+        margin-left: 24px;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 
@@ -114,5 +136,17 @@ $design_height: 1080;
     display: flex;
     box-sizing: border-box;
   }
+
 }
-</style>>
+</style>
+<style lang="scss">
+.el-input__inner {
+  height: 30px;
+  width: 166px;
+  background: transparent;
+  border: none;
+}
+.el-input__suffix {
+  display: none;
+}
+</style>
