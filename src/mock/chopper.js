@@ -71,8 +71,8 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             id,
             x: currentX,
             y: currentY,
-            label: innerIndex === 0 ? index + 1 : label,
-            type: innerIndex === 0 ? "first-node" : "custom-node",
+            label: innerIndex === 0 ? index + 1 : innerIndex === choppers.length - 1 ? '逆几何分子振动谱仪' : label,
+            type: innerIndex === 0 ? "first-node" : innerIndex === choppers.length - 1 ? 'last-node' : "custom-node",
             deg: Math.PI - curDeg,
           });
         });
@@ -101,8 +101,8 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             id,
             x: currentX,
             y: currentY,
-            label: innerIndex === 0 ? index + chunkedData[0].length + 1 : label,
-            type: innerIndex === 0 ? "first-node" : "custom-node",
+            label: innerIndex === 0 ? index + chunkedData[0].length + 1 : innerIndex === choppers.length - 1 ? '逆几何分子振动谱仪' : label,
+            type: innerIndex === 0 ? "first-node" : innerIndex === choppers.length - 1 ? 'last-node' : "custom-node",
             deg: Math.PI - curDeg,
           });
         });
