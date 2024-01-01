@@ -1,0 +1,35 @@
+<svg width="100%" height="88" viewBox="0 0 704 88" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+<g clip-path="url(#clip0)">
+<rect opacity="0.1" width="1922" height="88" fill="#00C7FF"/>
+<g opacity="0.6">
+<mask id="path-2-inside-1" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M1922 88H18.6376L0 72.7599L0 0"/>
+</mask>
+<path d="M18.6376 88L18.0046 88.7741L18.2808 89H18.6376V88ZM0 72.7599H-1V73.2339L-0.633018 73.534L0 72.7599ZM1922 87H18.6376V89H1922V87ZM19.2706 87.2259L0.633018 71.9858L-0.633018 73.534L18.0046 88.7741L19.2706 87.2259ZM1 72.7599V0L-1 0V72.7599H1Z" fill="#00C7FF" mask="url(#path-2-inside-1)"/>
+</g>
+<g opacity="0.6">
+<mask id="path-4-inside-2" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M24 0L1901.22 0L1920 15.5105V87.7787"/>
+</mask>
+<path d="M1901.22 0L1901.85 -0.771075L1901.58 -1H1901.22V0ZM1920 15.5105H1921V15.0394L1920.64 14.7395L1920 15.5105ZM24 1H1901.22V-1H24V1ZM1900.58 0.771075L1919.36 16.2816L1920.64 14.7395L1901.85 -0.771075L1900.58 0.771075ZM1919 15.5105V87.7787H1921V15.5105H1919Z" fill="#00C7FF" mask="url(#path-4-inside-2)"/>
+</g>
+<path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" d="M682 8H684L674 41H672L450 39H672L682 8ZM682 82H684L674 51H672L450 53H672L682 82Z" fill="#00BBFF"/>
+<path opacity="0.5" d="M693.5 0.5H692.5V86.5H693.5V0.5Z" stroke="#00C7FF"/>
+<mask id="path-8-inside-3" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M17.1818 87.7788H0V73.7788"/>
+</mask>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M17.1818 87.7788H0V73.7788" fill="#00C7FF"/>
+<path d="M0 87.7788H-2V89.7788H0V87.7788ZM17.1818 85.7788H0V89.7788H17.1818V85.7788ZM2 87.7788V73.7788H-2V87.7788H2Z" fill="#00C7FF" mask="url(#path-8-inside-3)"/>
+<mask id="path-10-inside-4" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 28V0H23.246"/>
+</mask>
+<path d="M0 0V-3H-3V0H0ZM3 28V0H-3V28H3ZM0 3H23.246V-3H0V3Z" fill="#00C7FF" mask="url(#path-10-inside-4)"/>
+<path opacity="0.2" d="M460.532 81.5402H863.75L870.636 74.6538H1060.75L1067.64 81.5402H1438" stroke="#00C7FF"/>
+<circle opacity="0.2" cx="472.5" cy="81.5" r="1.5" stroke="#00C7FF"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="704" height="88" fill="white"/>
+</clipPath>
+</defs>
+</svg>
