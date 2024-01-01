@@ -57,7 +57,7 @@ export const constantRoutes = [
   },
   {
     path: '/chopper',
-    component: Layout,
+    component: () => import('@/views/Detail/index'),
     redirect: 'chopper-detail',
     children: [
       {

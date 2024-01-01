@@ -1,169 +1,100 @@
 <template>
   <div class="container">
-    <div class="main-info">
-      <div class="main-alert">
-        <div class="title">MP1斩波器停止报警</div>
-        <div class="info">无报警</div>
-      </div>
-      <div class="main-alert">
-        <div class="title">MP1斩波器停止报警</div>
-        <div class="info">无报警</div>
-      </div>
-    </div>
-    <div class="sub-info">
-      <div class="sub-alert">
-        <div class="title">斩波器驱动故障报警</div>
-        <div class="info">无报警</div>
-      </div>
-      <div class="sub-alert">
-        <div class="title">斩波器驱动故障报警</div>
-        <div class="info">无报警</div>
-      </div>
-      <div class="sub-alert">
-        <div class="title">斩波器驱动故障报警</div>
-        <div class="info">无报警</div>
-      </div>
-      <div class="sub-alert">
-        <div class="title">斩波器驱动故障报警</div>
-        <div class="info">无报警</div>
+    <div class="header">
+      <div class="header-left"></div>
+      <div class="header-center"></div>
+      <div class="header-right">
+        <div class="date"></div>
+        <div class="filter"></div>
+        <div class="exit-img"></div>
       </div>
     </div>
-    <div class="chopper-charts">
-      <div id="chopper-charts-container" />
-    </div>
+    <div class="body"></div>
   </div>
-</template>
+</template> 
 
 <script>
-import * as echarts from "echarts";
 export default {
   mounted() {
-    // 准备数据
-    const xAxisData = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
-    const seriesData = [
-      {
-        name: "系列1",
-        data: [120, 200, 150, 80, 70, 110, 130],
-      },
-      {
-        name: "系列2",
-        data: [90, 150, 120, 100, 80, 70, 60],
-      },
-    ];
-
-    // 创建图表实例
-    const myChart = echarts.init(
-      document.getElementById("chopper-charts-container")
-    );
-
-    // 设置图表配置项
-    const option = {
-      grid: {
-        left: 0,
-        right: 0,
-        top: 16,
-        bottom: 10,
-        containLabel: true,
-        show: true,
-        borderColor: "#ccc",
-        borderWidth: 1,
-        lineStyle: {
-          color: "#ddd",
-          type: "dashed",
-        },
-      },
-      legend: {
-        show: true,
-        data: ["系列1", "系列2"],
-        textStyle: {
-          color: "#333",
-        },
-        bottom: -10,
-        right: 10
-      },
-      xAxis: {
-        type: "category",
-        data: xAxisData,
-      },
-      yAxis: {
-        type: "value",
-      },
-      series: seriesData.map(function (item) {
-        return {
-          name: item.name,
-          type: "line",
-          data: item.data,
-        };
-      }),
-    };
-
-    // 将配置项应用到图表中
-    myChart.setOption(option);
+    
   },
 };
 </script>
 
 <style lang="scss" scoped>
+$design_width: 1920;
+$design_height: 1080;
+
+@function px2vw($px) {
+  @return $px / ($design_width / 100) + vw;
+}
+
+@function px2vh($px) {
+  @return $px / ($design_height / 100 ) + vh;
+}
 .container {
-  padding: 8px;
-  .main-info {
-    width: 100%;
+  .header {
+    height: 88px;
     display: flex;
-    .main-alert {
+    align-items: center;
+    background: rgba(29, 67, 84, 1);
+    width: 100%;
+    .header-left {
       flex: 1;
-      background: green;
-      margin-right: 10px;
+      height: 100%;
+      background-image: url("../../assets/svgs/detail-header-left.svg");
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      background-size: cover;
       display: flex;
-      justify-content: center;
-      flex-direction: column;
       align-items: center;
-      color: #fff;
-      padding: 8px 0px 8px 0px;
-      font-weight: 600;
-      .title {
-        font-size: 12px;
-      }
-      .info {
-        font-size: 16px;
-        margin-top: 12px;
-      }
+      padding-left: px2vw(30);
+      color: rgba(0, 242, 255, 1);
+      font-weight: 400;
+    }
+    .header-center {
+      width: 488px;
+      height: 100%;
+      background-image: url("../../assets/svgs/detail-header-title.svg");
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(0, 242, 255, 1);
+      font-weight: 400;
+      font-size: 36px;
+    }
+
+    .header-right {
+      flex: 1;
+      height: 100%;
+      background-image: url("../../assets/svgs/detail-header-right.svg");
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: px2vw(27);
+      color: rgba(0, 242, 255, 1);
+      font-size: 14px;
     }
   }
-  .sub-info {
+
+  .body {
+    height: calc(100vh - 88px);
     width: 100%;
+    background-image: url("../../assets/images/big-board-bg1.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 100% 100%;
+    vertical-align: middle;
+    overflow-y: hidden;
+    padding: 24px;
     display: flex;
-    .sub-alert {
-      margin-top: 8px;
-      flex: 1;
-      background: green;
-      flex: 1;
-      background: green;
-      margin-right: 10px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      color: #fff;
-      padding: 8px 0px 8px 0px;
-      font-weight: 600;
-      .title {
-        font-size: 12px;
-      }
-      .info {
-        font-size: 16px;
-        margin-top: 12px;
-      }
-    }
-  }
-  .chopper-charts {
-    width: 100%;
-    padding-right: 8px;
-    #chopper-charts-container {
-      width: 100%;
-      height: 300px;
-      margin-top: 8px;
-      padding-right: 8px;
-    }
+    box-sizing: border-box;
   }
 }
 </style>>

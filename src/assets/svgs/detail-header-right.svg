@@ -1,0 +1,35 @@
+<svg width="100%" height="88" viewBox="0 0 728 88" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0)">
+<rect opacity="0.1" x="-1192" width="1922" height="88" fill="#00C7FF"/>
+<g opacity="0.6">
+<mask id="path-2-inside-1" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M730 88H-1173.36L-1192 72.7599L-1192 0"/>
+</mask>
+<path d="M-1173.36 88L-1174 88.7741L-1173.72 89H-1173.36V88ZM-1192 72.7599H-1193V73.2339L-1192.63 73.534L-1192 72.7599ZM730 87H-1173.36V89H730V87ZM-1172.73 87.2259L-1191.37 71.9858L-1192.63 73.534L-1174 88.7741L-1172.73 87.2259ZM-1191 72.7599V0L-1193 0V72.7599H-1191Z" fill="#00C7FF" mask="url(#path-2-inside-1)"/>
+</g>
+<g opacity="0.6">
+<mask id="path-4-inside-2" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M-1168 0L709.217 0L728 15.5105V87.7787"/>
+</mask>
+<path d="M709.217 0L709.854 -0.771075L709.577 -1H709.217V0ZM728 15.5105H729V15.0394L728.637 14.7395L728 15.5105ZM-1168 1H709.217V-1H-1168V1ZM708.581 0.771075L727.363 16.2816L728.637 14.7395L709.854 -0.771075L708.581 0.771075ZM727 15.5105V87.7787H729V15.5105H727Z" fill="#00C7FF" mask="url(#path-4-inside-2)"/>
+</g>
+<path opacity="0.5" fill-rule="evenodd" clip-rule="evenodd" d="M22 8H20L30 41H32L254 39H32L22 8ZM22 82H20L30 51H32L254 53H32L22 82Z" fill="#00BBFF"/>
+<path opacity="0.5" d="M10.5 0.5H11.5V86.5H10.5V0.5Z" stroke="#00C7FF"/>
+<mask id="path-8-inside-3" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M711.829 0H728V13"/>
+</mask>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M711.829 0H728V13" fill="#00C7FF"/>
+<path d="M728 0H730V-2H728V0ZM711.829 2H728V-2H711.829V2ZM726 0V13H730V0H726Z" fill="#00C7FF" mask="url(#path-8-inside-3)"/>
+<mask id="path-10-inside-4" fill="white">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M728 60.7788V87.7788H700.711"/>
+</mask>
+<path d="M728 87.7788V90.7788H731V87.7788H728ZM725 60.7788V87.7788H731V60.7788H725ZM728 84.7788H700.711V90.7788H728V84.7788Z" fill="#00C7FF" mask="url(#path-10-inside-4)"/>
+<path opacity="0.2" d="M-731.468 81.5402H-328.25L-321.364 74.6538H-131.25L-124.364 81.5402H246" stroke="#00C7FF"/>
+<circle opacity="0.2" cx="257.5" cy="81.5" r="1.5" stroke="#00C7FF"/>
+</g>
+<defs>
+<clipPath id="clip0">
+<rect width="728" height="88" fill="white"/>
+</clipPath>
+</defs>
+</svg>
