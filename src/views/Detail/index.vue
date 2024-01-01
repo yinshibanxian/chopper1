@@ -4,7 +4,9 @@
       <div class="header-left"></div>
       <div class="header-center"></div>
       <div class="header-right">
-        <div class="date"></div>
+        <div class="date">
+          {{ refreshCurrenTime }}
+        </div>
         <div class="filter"></div>
         <div class="exit-img"></div>
       </div>
@@ -16,8 +18,24 @@
 <script>
 export default {
   mounted() {
-    
+    this.refreshCurrentTimeTimer = setInterval(() => {
+      this.currentTime = this.$dayjs();
+    }, 1000);
   },
+  computed: {
+    refreshCurrenTime: function() {
+      return this.$dayjs(this.currentTime).format('YYYY年MM月DD日 HH:mm:ss');
+    }
+  },
+  beforeDestroy() {
+    this.refreshCurrentTimeTimer && clearInterval(this.refreshCurrentTimeTimer);
+  },
+  data() {
+    return {
+      currentTime: this.$dayjs(),
+      refreshCurrentTimeTimer: null
+    }
+  }
 };
 </script>
 

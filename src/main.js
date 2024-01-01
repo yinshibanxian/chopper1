@@ -14,6 +14,7 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import dayjs from 'dayjs';
 
 /**
  * If you don't want to use mock-server
@@ -40,4 +41,6 @@ new Vue({
   router,
   store,
   render: h => h(App)
-})
+});
+
+Vue.prototype.$dayjs = dayjs;
