@@ -480,8 +480,4 @@ $design_height: 1080;
   background: rgb(2, 12, 12);
 }
 
-
-// .el-input--suffix .el-input__inner {
-//   color: ;
-// }
 </style>
