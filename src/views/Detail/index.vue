@@ -73,21 +73,60 @@
           </div>
         </div>
       </div>
+      <div class="chopper-trend-wrapper">
+        <div class="title">趋势分析</div>
+        <div class="charts-wrapper">
+         <div class="chart-wrapper" id="chart1"></div>
+         <div class="chart-wrapper" id="chart2"></div>
+         <div class="chart-wrapper" id="chart3"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template> 
 
 <script>
+import * as echarts from 'echarts';
 export default {
   mounted() {
     this.refreshCurrentTimeTimer = setInterval(() => {
       this.currentTime = this.$dayjs();
     }, 1000);
+    this.initChart();
   },
   computed: {
     refreshCurrenTime: function () {
       return this.$dayjs(this.currentTime).format("YYYY年MM月DD日 HH:mm:ss");
     },
+  },
+  methods: {
+    initChart() {
+      const firstChart = echarts.init(document.getElementById('chart1'));
+      console.log(firstChart, 'firstChart')
+      const option = {
+        title: {
+          text: 'echarts  入门示例',
+        },
+        tooltip: {
+
+        },
+        legend: {
+          data: ['销量']
+        },
+        xAxis: {
+          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+        },
+        yAxis: {},
+        series: [
+          {
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+          }
+        ]
+      };
+      firstChart.setOption(option)
+    }
   },
   beforeDestroy() {
     this.refreshCurrentTimeTimer && clearInterval(this.refreshCurrentTimeTimer);
@@ -190,7 +229,6 @@ $design_height: 1080;
     vertical-align: middle;
     overflow-y: hidden;
     padding: 24px;
-    display: flex;
     box-sizing: border-box;
     padding: 16px;
     .chopper-status-wrapper {
@@ -258,7 +296,12 @@ $design_height: 1080;
         box-sizing: border-box;
         border-top: 1px solid #45c4ff;
         border-bottom: 1px solid #45c4ff;
-        border-image: linear-gradient(270deg, rgba(0, 197, 255, .103855) 0%, rgba(0, 197, 255, .493744) 48.55%, rgba(0, 197, 255, .103969) 100%);
+        border-image: linear-gradient(
+          270deg,
+          rgba(0, 197, 255, 0.103855) 0%,
+          rgba(0, 197, 255, 0.493744) 48.55%,
+          rgba(0, 197, 255, 0.103969) 100%
+        );
         border-image-slice: 10;
         display: flex;
         justify-content: space-between;
@@ -268,14 +311,19 @@ $design_height: 1080;
           align-items: center;
           justify-content: center;
           border-right: 1px solid #45c4ff;
-          border-image: linear-gradient(180deg, rgba(0, 197, 255, .103855) 0%, rgba(0, 197, 255, .493744) 48.55%, rgba(0, 197, 255, .103969) 100%);
+          border-image: linear-gradient(
+            180deg,
+            rgba(0, 197, 255, 0.103855) 0%,
+            rgba(0, 197, 255, 0.493744) 48.55%,
+            rgba(0, 197, 255, 0.103969) 100%
+          );
           border-image-slice: 2;
           margin: 0 auto;
           &:last-of-type {
             border-right: none;
           }
 
-          &:nth-of-type(2n+1) {
+          &:nth-of-type(2n + 1) {
             flex: 2;
           }
 
@@ -291,10 +339,8 @@ $design_height: 1080;
           }
 
           &:nth-of-type(2n) {
-
             .sub-status-num {
               color: #f5a623;
-              ;
             }
           }
 
@@ -303,6 +349,30 @@ $design_height: 1080;
             font-weight: 400;
             font-size: 12px;
             color: #fff;
+          }
+        }
+      }
+    }
+
+    .chopper-trend-wrapper {
+      margin-top: 32px;
+      .title {
+        font-size: 24px;
+        color: #00f2ff;
+        line-height: 32px;
+        font-weight: 600;
+      }
+
+      .charts-wrapper {
+        margin-top: 32px;
+        width: 100%;
+        display: flex;
+        .chart-wrapper {
+          flex: 1;
+          height: 300px;
+          margin-right: 16px;
+          &:nth-of-type(3n) {
+            margin-right: 0px;
           }
         }
       }
