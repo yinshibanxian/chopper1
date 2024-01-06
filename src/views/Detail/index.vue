@@ -42,6 +42,36 @@
             </div>
           </div>
         </div>
+        <div class="chopper-sub-status">
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">26</div>
+            <div class="sub-status-desc">T1斩波器设定速度</div>
+          </div>
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">7722μs</div>
+            <div class="sub-status-desc">T1斩波器设定相位</div>
+          </div>
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">7721μs</div>
+            <div class="sub-status-desc">T1斩波器实际相位</div>
+          </div>
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">3.20°</div>
+            <div class="sub-status-desc">T1斩波器设定TDC角度</div>
+          </div>
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">100.0%</div>
+            <div class="sub-status-desc">T1斩波器相位控制达标百分比</div>
+          </div>
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">0.15A</div>
+            <div class="sub-status-desc">T1斩波器电机电流</div>
+          </div>
+          <div class="chopper-sub-status-item">
+            <div class="sub-status-num">26</div>
+            <div class="sub-status-desc">T1斩波器设定速度</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -218,6 +248,61 @@ $design_height: 1080;
               color: #00f2ff;
               font-weight: 600;
             }
+          }
+        }
+      }
+
+      .chopper-sub-status {
+        margin-top: 32px;
+        height: 62px;
+        box-sizing: border-box;
+        border-top: 1px solid #45c4ff;
+        border-bottom: 1px solid #45c4ff;
+        border-image: linear-gradient(270deg, rgba(0, 197, 255, .103855) 0%, rgba(0, 197, 255, .493744) 48.55%, rgba(0, 197, 255, .103969) 100%);
+        border-image-slice: 10;
+        display: flex;
+        justify-content: space-between;
+        &-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-right: 1px solid #45c4ff;
+          border-image: linear-gradient(180deg, rgba(0, 197, 255, .103855) 0%, rgba(0, 197, 255, .493744) 48.55%, rgba(0, 197, 255, .103969) 100%);
+          border-image-slice: 2;
+          margin: 0 auto;
+          &:last-of-type {
+            border-right: none;
+          }
+
+          &:nth-of-type(2n+1) {
+            flex: 2;
+          }
+
+          &:nth-of-type(2n) {
+            flex: 3;
+          }
+
+          .sub-status-num {
+            line-height: 22.4px;
+            font-weight: 400;
+            font-size: 16px;
+            color: #00fefe;
+          }
+
+          &:nth-of-type(2n) {
+
+            .sub-status-num {
+              color: #f5a623;
+              ;
+            }
+          }
+
+          .sub-status-desc {
+            line-height: 16px;
+            font-weight: 400;
+            font-size: 12px;
+            color: #fff;
           }
         }
       }
