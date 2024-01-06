@@ -8,7 +8,7 @@
           {{ refreshCurrenTime }}
         </div>
         <div class="filter">
-          <el-select placeholder="" popper-class="filter-popper">
+          <el-select placeholder="" popper-class="filter-popper" value="24h">
             <el-option value="24h">24h</el-option>
           </el-select>
         </div>
@@ -76,9 +76,9 @@
       <div class="chopper-trend-wrapper">
         <div class="title">趋势分析</div>
         <div class="charts-wrapper">
-         <div class="chart-wrapper" id="chart1"></div>
-         <div class="chart-wrapper" id="chart2"></div>
-         <div class="chart-wrapper" id="chart3"></div>
+          <div class="chart-wrapper" id="chart1"></div>
+          <div class="chart-wrapper" id="chart2"></div>
+          <div class="chart-wrapper" id="chart3"></div>
         </div>
       </div>
     </div>
@@ -86,13 +86,16 @@
 </template> 
 
 <script>
-import * as echarts from 'echarts';
+import * as echarts from "echarts";
 export default {
   mounted() {
     this.refreshCurrentTimeTimer = setInterval(() => {
       this.currentTime = this.$dayjs();
     }, 1000);
-    this.initChart();
+    this.initChart('chart1');
+    this.initChart('chart2');
+    this.initChart('chart3');
+    
   },
   computed: {
     refreshCurrenTime: function () {
@@ -100,33 +103,102 @@ export default {
     },
   },
   methods: {
-    initChart() {
-      const firstChart = echarts.init(document.getElementById('chart1'));
-      console.log(firstChart, 'firstChart')
+    initChart(id) {
+      const firstChart = echarts.init(document.getElementById(id));
       const option = {
         title: {
-          text: 'echarts  入门示例',
-        },
-        tooltip: {
-
+          text: "T1斩波器相位误差/°",
+          textStyle: {
+            fontSize: 14,
+            color: "#00F2FF",
+          },
         },
         legend: {
-          data: ['销量']
+          data: ["mr_chop_pv"],
+          top: 24,
+          right: 0,
+          icon: 'rect',
+          fontWeight: 400,
+          textStyle: {
+            color: "rgba(255, 255, 255, .65)",
+          },
+          axisPointer: {
+            lineStyle: {
+              color: "#00F2FF",
+              type: "dashed",
+            },
+          },
+          itemStyle: {
+            color: '#3dc579'
+          }
         },
         xAxis: {
-          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+          type: 'category',
+          data: ["16:00", "17:00", "18:00", "19:00", "20:00"],
+          axisLine: {
+            lineStyle: {
+              color: "#00B7FD",
+              opacity: 0.2,
+            },
+          },
+          axisTick: {
+            show: false,
+          },
+          axisLabel: {
+            color: "#fff",
+            opacity: 0.45,
+          },
         },
-        yAxis: {},
+        yAxis: {
+          type: "value",
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#00B7FD",
+              opacity: 0.5,
+            },
+          },
+          axisLabel: {
+            color: "#fff",
+            opacity: 0.45,
+          },
+          splitLine: {
+            show: false,
+          },
+        },
         series: [
           {
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-          }
-        ]
+            data: [10, 22, 28, 23, 19, 11, 22, 13],
+            type: "line",
+            smooth: true,
+            name: "mr_chop_pv",
+            symbol: 'none',
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {
+                  offset: 0,
+                  color: "rgba(139, 255, 151, .7)",
+                },
+                {
+                  offset: 1,
+                  color: "transparent",
+                },
+              ]),
+            },
+            lineStyle: {
+              color: '#3dc579'
+            }
+          },
+        ],
+        grid: {
+          left: 0,
+          right: 0,
+          bottom: 0,
+          containLabel: true,
+        },
       };
-      firstChart.setOption(option)
-    }
+      firstChart.setOption(option);
+    },
   },
   beforeDestroy() {
     this.refreshCurrentTimeTimer && clearInterval(this.refreshCurrentTimeTimer);
@@ -386,6 +458,7 @@ $design_height: 1080;
   width: 166px;
   background: transparent;
   border: none;
+  color: #00f2ff;
 }
 .el-input__suffix {
   display: none;
@@ -406,4 +479,9 @@ $design_height: 1080;
 .el-select-dropdown {
   background: rgb(2, 12, 12);
 }
+
+
+// .el-input--suffix .el-input__inner {
+//   color: ;
+// }
 </style>
