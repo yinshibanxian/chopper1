@@ -8,19 +8,46 @@
           {{ refreshCurrenTime }}
         </div>
         <div class="filter">
-          <el-select placeholder="">
-            <el-option>abc</el-option>
+          <el-select placeholder="" popper-class="filter-popper">
+            <el-option value="24h">24h</el-option>
           </el-select>
         </div>
         <div class="exit-img"></div>
       </div>
     </div>
-    <div class="body"></div>
+    <div class="body">
+      <div class="chopper-status-wrapper">
+        <div class="chopper-main-status">
+          <div class="title">T1 斩波器状态监测</div>
+          <div class="main-status">
+            <div class="main-status-item">
+              <div class="status">正常</div>
+              <div class="status-desc">T1斩波器是否启动</div>
+            </div>
+            <div class="main-status-item">
+              <div class="status">达标</div>
+              <div class="status-desc">T1斩波器相位控制是否达标</div>
+            </div>
+            <div class="main-status-item">
+              <div class="status">正常</div>
+              <div class="status-desc">T1斩波器电机电流报警</div>
+            </div>
+            <div class="main-status-item">
+              <div class="status">正常</div>
+              <div class="status-desc">T1斩波器振动报警</div>
+            </div>
+            <div class="main-status-item">
+              <div class="status">正常</div>
+              <div class="status-desc">T1斩波器超差报警</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template> 
 
 <script>
-import { Select } from "element-ui";
 export default {
   mounted() {
     this.refreshCurrentTimeTimer = setInterval(() => {
@@ -78,7 +105,7 @@ $design_height: 1080;
     .header-center {
       width: 488px;
       height: 100%;
-      background-image: url("../../assets/svgs/detail-header-title.svg");
+      background-image: url("../../assets/svgs/detail-header-title1.svg");
       background-repeat: no-repeat;
       background-position: 0 100%;
       background-size: cover;
@@ -135,8 +162,67 @@ $design_height: 1080;
     padding: 24px;
     display: flex;
     box-sizing: border-box;
-  }
+    padding: 16px;
+    .chopper-status-wrapper {
+      width: 100%;
+      .chopper-main-status {
+        width: 100%;
+        .title {
+          font-size: 24px;
+          color: #00f2ff;
+          line-height: 32px;
+          font-weight: 600;
+        }
+        .main-status {
+          margin-top: 32px;
+          height: 107px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 100%;
+          .main-status-item {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            border-right: 1px solid #45c4ff;
+            border-image: linear-gradient(
+              180deg,
+              rgba(0, 197, 255, 0.103855) 0%,
+              rgba(0, 197, 255, 0.493744) 48.55%,
+              rgba(0, 197, 255, 0.103969) 100%
+            );
+            border-image-slice: 1;
+            padding-left: px2vw(34);
+            flex: 1;
+            &:first-of-type {
+              align-items: flex-start;
+              padding-left: 0;
+            }
 
+            &:last-of-type {
+              border-right: none;
+              flex: 1;
+            }
+
+            .status {
+              color: #f5a623;
+              display: flex;
+              align-items: flex-end;
+              font-size: 70px;
+              font-weight: 700;
+              line-height: 81px;
+            }
+
+            .status-desc {
+              line-height: 22px;
+              color: #00f2ff;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 </style>
 <style lang="scss">
@@ -148,5 +234,21 @@ $design_height: 1080;
 }
 .el-input__suffix {
   display: none;
+}
+
+.filter-popper {
+  border: 1px solid #00c7ff;
+}
+
+.popper__arrow {
+  display: none !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: #00f2ff;
+  background: rgb(2, 12, 12);
+}
+.el-select-dropdown {
+  background: rgb(2, 12, 12);
 }
 </style>
