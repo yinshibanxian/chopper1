@@ -11,8 +11,9 @@
 <script>
 import G6 from "@antv/g6";
 import mockData from "@/mock/chopper";
+import { getAlgorithmList } from '@/api/algorithm';
 export default {
-  mounted() {
+  async mounted() {
     const { edges, nodes } = mockData;
     G6.registerNode("centerNode", {
       draw: (_cfg, group) => {
@@ -308,6 +309,8 @@ export default {
     graph.on("node:click", this.handleNodeClick);
 
     graph.render();
+
+    const res = await getAlgorithmList({ page: 1 });
   },
   methods: {
     handleNodeClick(evt) {
