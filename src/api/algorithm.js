@@ -9,9 +9,9 @@ export function getAlgorithmList(page = 1) {
   //   method: 'get',
   //   params
   // })
-  return axios({
+  return request({
     method: 'get',
-    url: `${baseURL}/algorithm/?page=1`,
+    url: `/algorithm/?page=1`,
     withCredentials: true
   })
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getAccess } from './auth'
 
 // create an axios instance
 const service = axios.create({
@@ -10,16 +10,21 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 
+
 // request interceptor
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-
+    console.log(store.getters.access, 'access');
     if (store.getters.access) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['access'] = access;
+      config.headers['authorization'] = `Bearer ${access}`;
+    } else {
+      const access = getAccess();
+      config.headers['authorization'] = `Bearer ${access}`;
+
     }
     return config
   },

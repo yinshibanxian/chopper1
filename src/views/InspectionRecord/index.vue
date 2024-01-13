@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
-    <el-table
+    <div class="header">
+      <div class="filter">
+        <el-select size="small" />
+      </div>
+      <div class="operate-btn">
+        <el-button size="small" type="primary">新建巡检记录</el-button>
+      </div>
+    </div>
+    <div class="table">
+      <el-table
+       style="width: 100%;"
+      >
+
+      </el-table>
+    </div>
+    <!-- <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
@@ -39,41 +54,53 @@
           <span>{{ scope.row.display_time }}</span>
         </template>
       </el-table-column>
-    </el-table>
+    </el-table> -->
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getList } from "@/api/table";
 
 export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
+        published: "success",
+        draft: "gray",
+        deleted: "danger",
+      };
+      return statusMap[status];
+    },
   },
   data() {
     return {
       list: null,
-      listLoading: true
-    }
+      listLoading: true,
+      currentPage: 1,
+      pageSize: 20
+    };
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
-    }
+      this.listLoading = true;
+      getList().then((response) => {
+        this.list = response.data.items;
+        this.listLoading = false;
+      });
+    },
+  },
+};
+</script>
+<style lang="scss" scoped>
+.app-container {
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
-</script>
+</style>
