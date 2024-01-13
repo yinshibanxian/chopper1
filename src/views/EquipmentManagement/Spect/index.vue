@@ -6,8 +6,11 @@
           size="small"
           class="search-input"
           placeholder="请输入谱仪ID"
+          v-model="searchText"
         />
-        <el-button size="small" type="primary">搜索</el-button>
+        <el-button size="small" type="primary" @click="searchSpect"
+          >搜索</el-button
+        >
       </div>
       <div class="operate-btn">
         <el-button
@@ -25,26 +28,21 @@
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="editSpect(scope.$index, spectList)"
+              @click.native.prevent="handleEditSpectBtnClick(scope.row)"
               type="text"
               size="small"
-              style="margin-right: 8px;"
+              style="margin-right: 8px"
             >
               编辑
             </el-button>
-           <el-popconfirm
-              :title="`确定删除${scope.row.spect_name}`"
-              @confirm="alert('abc')"
-            >
             <el-button
-              slot="reference"
               type="text"
               size="small"
-              style="color: rgba(255, 0, 0, 0.7);"
+              style="color: rgba(255, 0, 0, 0.7)"
+              @click="handleDeleteSpectBtnClick(scope.row)"
             >
               删除
             </el-button>
-           </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -57,7 +55,10 @@
         ></el-pagination>
       </div>
     </div>
-    <el-dialog title="新建谱仪" :visible.sync="modalVisible">
+    <el-dialog
+      :title="`${editingSpect ? '编辑' : '新建'}谱仪`"
+      :visible.sync="modalVisible"
+    >
       <el-form :model="form" ref="form" :rules="rules">
         <el-form-item label="谱仪代号" prop="spect_code">
           <el-input size="small" v-model="form.spect_code"></el-input>
@@ -75,11 +76,20 @@
 </template>
 
 <script>
-import { createSpect, getSpectList } from "@/api/spect";
+import {
+  createSpect,
+  getSpectList,
+  deleteSpect,
+  updateSpect,
+  searchSpectById,
+} from "@/api/spect";
 export default {
   data() {
     return {
+      searchText: "",
       modalVisible: false,
+      popoverVisible: false,
+      editingSpect: null,
       form: {
         // 谱仪代号
         spect_code: "",
@@ -115,17 +125,48 @@ export default {
     },
   },
   methods: {
-    editSpect(index, rows) {
-
+    async searchSpect() {
+      if (this.searchText === "") {
+        this.currentPage = 1;
+        this.getSpectList();
+        return;
+      }
+      const res = await searchSpectById(this.searchText);
+      if (res.data) {
+        this.spectList = [
+          {
+            id: res.data.id,
+            spect_code: res.data.spect_code,
+            spect_name: res.data.spect_name,
+          },
+        ];
+      }
     },
-    deleteSpect(index, rows) {
-      console.log(index, rows, 'rows');
+    async _deleteSpect(id) {
+      await deleteSpect({ id });
+      this.$info("删除成功");
+      this.getSpectList();
     },
     handleCurrentPageChange(currentPage) {
       this.currentPage = currentPage;
     },
     handleCreateSpectBtnClick() {
       this.modalVisible = true;
+    },
+    handleEditSpectBtnClick(spect) {
+      this.editingSpect = spect;
+      this.form.spect_name = spect.spect_name;
+      this.form.spect_code = spect.spect_code;
+      this.modalVisible = true;
+    },
+    handleDeleteSpectBtnClick(spect) {
+      this.$confirm(`确定删除${spect.spect_name}？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "error",
+      }).then(() => {
+        this._deleteSpect(spect.id);
+      });
     },
     async getSpectList() {
       const res = await getSpectList({
@@ -136,20 +177,34 @@ export default {
       this.totalCount = res.data.count;
     },
     async handleCreateSpect() {
-      const res = await createSpect({
+      await createSpect({
         spect_code: this.form.spect_code,
         spect_name: this.form.spect_name,
       });
-      if (res.code === 201) {
-        this.currentPage = 1;
-        this.getSpectList();
-      }
+      this.currentPage = 1;
+      this.getSpectList();
+    },
+    async handleEditSpect() {
+      const { id } = this.editingSpect;
+      const { spect_name, spect_code } = this.form;
+      await updateSpect({
+        id,
+        spect_code,
+        spect_name,
+      });
+      this.getSpectList();
     },
     confirmCreateSpect() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
-          await this.handleCreateSpect();
+          console.log(this.form, "form>>>");
+          if (this.editingSpect) {
+            await this.handleEditSpect();
+          } else {
+            await this.handleCreateSpect();
+          }
           this.modalVisible = false;
+          this.editingSpect = null;
         }
       });
     },

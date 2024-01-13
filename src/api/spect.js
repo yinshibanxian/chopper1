@@ -24,24 +24,25 @@ export function getSpectList({ page, size }) {
 
 export function deleteSpect({ id }) {
   return request({
-    url: "/spect/",
-    method: "delete",
-    params: {
-      id,
-    },
+    url: `/spect/${id}/`,
+    method: "delete"
   });
 }
 
 export function updateSpect({ id, spect_code, spect_name }) {
   return request({
-    url: "/spect/",
+    url: `/spect/${id}/`,
     method: "put",
-    params: {
-      id,
-    },
     data: {
       spect_code,
       spect_name,
     },
   });
+};
+
+export function searchSpectById(id) {
+  return request({
+    url: `/spect/${id}/`,
+    method: 'get'
+  })
 }
