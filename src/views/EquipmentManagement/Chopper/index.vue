@@ -98,7 +98,7 @@
           <el-input size="small" v-model="form.chopper_code"></el-input>
         </el-form-item>
         <el-form-item label="斩波器名称" prop="chopper_name">
-          <el-input size="small" v-model="form.chopper_name"></el-input>
+          <el-input size="small" v-model="form.chopper_name"></el-input>other
         </el-form-item>
         <el-form-item label="是否在役" prop="is_in_service">
           <el-switch size="small" v-model="form.is_in_service"></el-switch>
@@ -149,10 +149,7 @@
 
 <script>
 import {
-  createSpect,
   getSpectList,
-  deleteSpect,
-  updateSpect,
   searchSpectById,
 } from "@/api/spect";
 import { getChopperList, createChopper, deleteChopper, updateChopper } from "@/api/chopper";
