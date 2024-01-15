@@ -22,47 +22,42 @@
       </div>
     </div>
     <div class="table">
-      <el-table :data="chopperList">
+      <el-table :data="inspectRecordList">
         <el-table-column
           prop="chopper_code"
           label="斩波器代号"
         ></el-table-column>
         <el-table-column
-          prop="chopper_name"
-          label="斩波器名称"
+          prop="running_speed"
+          label="运行转速"
         ></el-table-column>
-        <el-table-column prop="is_in_service" label="是否在役">
-          <template slot-scope="scope">
-            {{ scope.row.is_in_service ? "是" : "否" }}
-          </template>
+        <el-table-column prop="running_temp" label="温度">
         </el-table-column>
-        <el-table-column prop="motor_model" label="电机型号"></el-table-column>
-        <el-table-column prop="normal_color" label="斩波器正常颜色">
-          <template slot-scope="scope">
-            <div
-              :style="`background: ${scope.row.normal_color};height:23px;width:50px;`"
-            ></div>
-          </template>
+        <el-table-column prop="running_vibration" label="振动"></el-table-column>
+        <el-table-column prop="running_veto_rate" label="Veto率">
         </el-table-column>
-        <el-table-column prop="alarm_color" label="斩波器报警颜色">
-          <template slot-scope="scope">
-            <div
-              :style="`background: ${scope.row.alarm_color};height:23px;width:50px;`"
-            ></div>
-          </template>
+        <el-table-column prop="running_time_week" label="周运行时长">
         </el-table-column>
-        <el-table-column prop="error_color" label="斩波器故障颜色">
-          <template slot-scope="scope">
-            <div
-              :style="`background: ${scope.row.error_color};height:23px;width:50px;`"
-            ></div>
-          </template>
+        <el-table-column prop="running_other" label="其他">
         </el-table-column>
-        <el-table-column prop="spect_code" label="关联谱仪表"></el-table-column>
+        <el-table-column prop="working_condition" label="工作氛围条件"></el-table-column>
+        <el-table-column prop="working_status" label="工作氛围状态"></el-table-column>
+        <el-table-column prop="working_other" label="工作氛围其他"></el-table-column>
+        <el-table-column prop="cool_temp" label="冷却温度"></el-table-column>
+        <el-table-column prop="cool_heat" label="冷却压力"></el-table-column>
+        <el-table-column prop="cool_flux" label="冷却流量"></el-table-column>
+        <el-table-column prop="cool_temp" label="冷却温度"></el-table-column>
+        <el-table-column prop="cool_water_level " label="冷却水位"></el-table-column>
+        <el-table-column prop="cool_other" label="冷却其他参数"></el-table-column>
+        <el-table-column prop="electrical_control_cabinet" label="控制柜电气状态"></el-table-column>
+        <el-table-column prop="electrical_vacuum_pump" label="控制柜电气状态"></el-table-column>
+        <el-table-column prop="electrical_chiller " label="冷水机电气状态"></el-table-column>
+        <el-table-column prop="error_record" label="故障记录"></el-table-column>
+        <el-table-column prop="other" label="其他"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="handleEditChopperBtnClick(scope.row)"
+              @click.native.prevent="handleEditInspectRecordBtnClick(scope.row)"
               type="text"
               size="small"
               style="margin-right: 8px"
@@ -73,7 +68,7 @@
               type="text"
               size="small"
               style="color: rgba(255, 0, 0, 0.7)"
-              @click="handleDeleteChopperBtnClick(scope.row)"
+              @click="handleDeleteInspectRecordBtnClick(scope.row)"
             >
               删除
             </el-button>
@@ -90,7 +85,7 @@
       </div>
     </div>
     <el-dialog
-      :title="`${editingChopper ? '编辑' : '新建'}斩波器`"
+      :title="`${editingInspectRecord ? '编辑' : '新建'}巡检记录`"
       :visible.sync="modalVisible"
     >
       <el-form :model="form" ref="form" :rules="rules">
@@ -170,7 +165,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="modalVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmCreateSpect">确定</el-button>
+        <el-button type="primary" @click="confirmCreateInspectRecord">确定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -179,14 +174,14 @@
 <script>
 import { getSpectList, searchSpectById } from "@/api/spect";
 import { getChopperList } from "@/api/chopper";
-import { createInspectRecord } from "@/api/inspectRecord";
+import { createInspectRecord, deleteInspectRecord, getInspectRecordList, updateInspectRecord } from "@/api/inspectRecord";
 export default {
   data() {
     return {
       searchText: "",
       modalVisible: false,
       popoverVisible: false,
-      editingChopper: null,
+      editingInspectRecord: null,
       form: {
         // 斩波器代号
         chopper_code: "",
@@ -227,10 +222,11 @@ export default {
       pageSize: 15,
       totalCount: 0,
       chopperList: [],
+      inspectRecordList: []
     };
   },
   mounted() {
-    this.getChopperList();
+    this.getInspectRecordList();
   },
   watch: {
     currentPage(newVal, oldVal) {
@@ -260,10 +256,10 @@ export default {
         ];
       }
     },
-    async _deleteChopper(id) {
-      await deleteChopper({ id });
+    async _deleteInspectRecord(id) {
+      await deleteInspectRecord({ id });
       this.$info("删除成功");
-      this.getChopperList();
+      this.getInspectRecordList();
     },
     handleCurrentPageChange(currentPage) {
       this.currentPage = currentPage;
@@ -279,33 +275,46 @@ export default {
     handleCreateChopperBtnClick() {
       this.modalVisible = true;
     },
-    handleEditChopperBtnClick(chopper) {
-      this.editingChopper = chopper;
-      this.form.chopper_name = chopper.chopper_name;
-      this.form.chopper_code = chopper.chopper_code;
-      this.form.is_in_service = chopper.is_in_service;
-      this.form.motor_model = chopper.motor_model;
-      this.form.normal_color = chopper.normal_color;
-      this.form.alarm_color = chopper.alarm_color;
-      this.form.error_color = chopper.error_color;
-      this.form.spect_code = chopper.spect_code;
+    handleEditInspectRecordBtnClick(inspectRecord) {
+      this.editingInspectRecord = inspectRecord;
+      this.form.chopper_code = inspectRecord.chopper_code;
+      this.form.running_speed = inspectRecord.running_speed;
+      this.form.running_temp = inspectRecord.running_temp;
+      this.form.running_vibration = inspectRecord.running_vibration;
+      this.form.running_veto_rate = inspectRecord.running_veto_rate;
+      this.form.running_time_week = inspectRecord.running_time_week;
+      this.form.running_other = inspectRecord.running_other;
+      this.form.working_condition = inspectRecord.working_condition;
+      this.form.working_status = inspectRecord.working_status;
+      this.form.working_other = inspectRecord.working_other;
+      this.form.cool_temp = inspectRecord.cool_temp;
+      this.form.cool_heat = inspectRecord.cool_heat;
+      this.form.cool_flux = inspectRecord.cool_flux;
+      this.form.cool_water_level = inspectRecord.cool_water_level;
+      this.form.cool_other = inspectRecord.cool_other;
+      this.form.electrical_control_cabinet = inspectRecord.electrical_control_cabinet;
+      this.form.electrical_vacuum_pump = inspectRecord.electrical_vacuum_pump;
+      this.form.electrical_chiller = inspectRecord.electrical_chiller;
+      this.form.error_record = inspectRecord.error_record;
+      this.form.other = inspectRecord.other;
       this.modalVisible = true;
     },
-    handleDeleteChopperBtnClick(chopper) {
-      this.$confirm(`确定删除${chopper.chopper_name}？`, "提示", {
+    handleDeleteInspectRecordBtnClick(inspectRecord) {
+      this.$confirm(`确定删除该条运维记录？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "error",
       }).then(() => {
-        this._deleteChopper(chopper.id);
+        this._deleteInspectRecord(inspectRecord.id);
       });
     },
-    async getChopperList() {
-      const res = await getChopperList({
+    async getInspectRecordList() {
+      const res = await getInspectRecordList({
         page: this.currentPage,
         size: this.pageSize,
       });
-      this.chopperList = res.data.list;
+      console.log(res, 'res>>>')
+      this.inspectRecordList = res.data.list;
       this.totalCount = res.data.count;
     },
     async handleCreateInspectRecord() {
@@ -332,43 +341,67 @@ export default {
         other: this.form.other,
       });
       this.currentPage = 1;
-      this.getChopperList();
+      this.getInspectRecordList();
     },
-    async handleEditChopper() {
-      const { id } = this.editingChopper;
+    async handleEditInspectRecord() {
+      const { id } = this.editingInspectRecord;
       const {
-        chopper_name,
         chopper_code,
-        is_in_service,
-        motor_model,
-        normal_color,
-        alarm_color,
-        error_color,
-        spect_code,
+        running_speed,
+        running_temp,
+        running_vibration,
+        running_veto_rate,
+        running_time_week,
+        running_other,
+        working_condition,
+        working_status,
+        working_other,
+        cool_temp,
+        cool_heat,
+        cool_flux,
+        cool_water_level,
+        cool_other,
+        electrical_control_cabinet,
+        electrical_vacuum_pump,
+        electrical_chiller,
+        error_record,
+        other,
       } = this.form;
-      await updateChopper({
+      await updateInspectRecord({
         id,
-        chopper_name,
         chopper_code,
-        is_in_service,
-        motor_model,
-        normal_color,
-        alarm_color,
-        error_color,
-        spect_code,
+        running_speed,
+        running_temp,
+        running_vibration,
+        running_veto_rate,
+        running_time_week,
+        running_other,
+        working_condition,
+        working_status,
+        working_other,
+        cool_temp,
+        cool_heat,
+        cool_flux,
+        cool_water_level,
+        cool_other,
+        electrical_control_cabinet,
+        electrical_vacuum_pump,
+        electrical_chiller,
+        error_record,
+        other,
       });
-      this.getChopperList();
+      this.getInspectRecordList();
     },
-    confirmCreateSpect() {
+    confirmCreateInspectRecord() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
-          if (this.editingChopper) {
-            await this.handleEditChopper();
+          if (this.editingInspectRecord) {
+            await this.handleEditInspectRecord();
           } else {
             await this.handleCreateInspectRecord();
           }
           this.modalVisible = false;
-          this.editingChopper = null;
+          this.editingInspectRecord = null;
         }
       });
     },
@@ -410,11 +443,17 @@ export default {
 .el-input__inner {
   width: 200px;
 }
-
+// .el-form {
+//   display: f;
+// }
 .el-form-item {
-  display: inline-block;
+  // display: flex;
+  
   .el-form-item__label {
     width: 120px;
+  }  
+  .el-form-item__content {
+    width: 50%;
   }
 }
 </style>
