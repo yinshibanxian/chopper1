@@ -87,9 +87,9 @@ export const constantRoutes = [
         meta: { title: '故障记录', icon: 'tree' }
       },
       {
-        path: 'tree1',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
+        path: '/maintenance',
+        name: 'maintenance',
+        component: () => import('@/views/operationAndMatainManagement'),
         meta: { title: '检修维护记录', icon: 'tree' }
       }
     ]
@@ -128,6 +128,12 @@ export const constantRoutes = [
         component: () => import('@/views/EquipmentManagement/Chopper'),
         name: 'Menu2',
         meta: { title: '斩波器管理' }
+      },
+      {
+        path: 'standard-management',
+        component: () => import('@/views/EquipmentManagement/StandardManagement'),
+        name: 'standardManagement',
+        meta: { title: '参数管理' }
       }
     ]
   },

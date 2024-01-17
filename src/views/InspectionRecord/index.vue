@@ -230,7 +230,7 @@ export default {
   },
   watch: {
     currentPage(newVal, oldVal) {
-      this.getChopperList();
+      this.getInspectRecordList();
     },
     modalVisible(newVal, oldVal) {
       if (newVal) {
@@ -313,7 +313,6 @@ export default {
         page: this.currentPage,
         size: this.pageSize,
       });
-      console.log(res, 'res>>>')
       this.inspectRecordList = res.data.list;
       this.totalCount = res.data.count;
     },
