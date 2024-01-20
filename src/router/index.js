@@ -137,7 +137,7 @@ export const constantRoutes = [
       },
       {
         path: 'chopper-standard',
-        component: () => import('@/views/EquipmentManagement/StandardManagement'),
+        component: () => import('@/views/ChopperStandard'),
         name: 'chopperStandard',
         meta: { title: '斩波器参数管理' }
       },

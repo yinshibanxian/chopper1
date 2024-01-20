@@ -16,15 +16,15 @@
           <el-button
             size="small"
             type="primary"
-            @click="handleCreateSpectBtnClick"
+            @click="handleCreateStandardBtnClick"
             >新建谱仪</el-button
           >
         </div>
       </div>
       <div class="table">
-        <el-table :data="spectList">
-          <el-table-column prop="spect_code" label="谱仪代号"></el-table-column>
-          <el-table-column prop="spect_name" label="谱仪名称"></el-table-column>
+        <el-table :data="standardList">
+          <el-table-column prop="parameter_code" label="参数编码"></el-table-column>
+          <el-table-column prop="parameter_name" label="参数名称"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
               <el-button
@@ -56,15 +56,15 @@
         </div>
       </div>
       <el-dialog
-        :title="`${editingSpect ? '编辑' : '新建'}谱仪`"
+        :title="`${editingStandard ? '编辑' : '新建'}谱仪`"
         :visible.sync="modalVisible"
       >
         <el-form :model="form" ref="form" :rules="rules">
-          <el-form-item label="谱仪代号" prop="spect_code">
-            <el-input size="small" v-model="form.spect_code"></el-input>
+          <el-form-item label="参数编码" prop="parameter_code">
+            <el-input size="small" v-model="form.parameter_code"></el-input>
           </el-form-item>
-          <el-form-item label="谱仪名称" prop="spect_name">
-            <el-input size="small" v-model="form.spect_name"></el-input>
+          <el-form-item label="参数名称" prop="parameter_name">
+            <el-input size="small" v-model="form.parameter_name"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -77,24 +77,19 @@
   
   <script>
   import {
-    createSpect,
-    getSpectList,
-    deleteSpect,
-    updateSpect,
     searchSpectById,
   } from "@/api/spect";
+  import { getStandardList, createStandard, updateStandard, deleteStandard } from '@/api/standarManagement';
   export default {
     data() {
       return {
         searchText: "",
         modalVisible: false,
         popoverVisible: false,
-        editingSpect: null,
+        editingStandard: null,
         form: {
-          // 谱仪代号
-          spect_code: "",
-          // 谱仪名称
-          spect_name: "",
+          parameter_code: "",
+          parameter_name: "",
         },
         rules: {
           spect_code: [
@@ -112,28 +107,28 @@
         },
         currentPage: 1,
         pageSize: 15,
-        spectList: [],
+        standardList: [],
         totalCount: 0,
       };
     },
     mounted() {
-      this.getSpectList();
+      this.getStandardList();
     },
     watch: {
       currentPage(newVal, oldVal) {
-        this.getSpectList();
+        this.getStandardList();
       },
     },
     methods: {
       async searchSpect() {
         if (this.searchText === "") {
           this.currentPage = 1;
-          this.getSpectList();
+          this.getStandardList();
           return;
         }
         const res = await searchSpectById(this.searchText);
         if (res.data) {
-          this.spectList = [
+          this.standardList = [
             {
               id: res.data.id,
               spect_code: res.data.spect_code,
@@ -142,69 +137,68 @@
           ];
         }
       },
-      async _deleteSpect(id) {
-        await deleteSpect({ id });
+      async _deleteStandard(id) {
+        await deleteStandard({ id });
         this.$info("删除成功");
-        this.getSpectList();
+        this.getStandardList();
       },
       handleCurrentPageChange(currentPage) {
         this.currentPage = currentPage;
       },
-      handleCreateSpectBtnClick() {
+      handleCreateStandardBtnClick() {
         this.modalVisible = true;
       },
-      handleEditSpectBtnClick(spect) {
-        this.editingSpect = spect;
-        this.form.spect_name = spect.spect_name;
-        this.form.spect_code = spect.spect_code;
+      handleEditSpectBtnClick(standard) {
+        this.editingStandard = standard;
+        this.form.parameter_code = standard.parameter_code;
+        this.form.parameter_name = standard.parameter_name;
         this.modalVisible = true;
       },
-      handleDeleteSpectBtnClick(spect) {
-        this.$confirm(`确定删除${spect.spect_name}？`, "提示", {
+      handleDeleteSpectBtnClick(standard) {
+        this.$confirm(`确定删除${standard.parameter_name}？`, "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "error",
         }).then(() => {
-          this._deleteSpect(spect.id);
+          this._deleteStandard(standard.id);
         });
       },
-      async getSpectList() {
-        const res = await getSpectList({
+      async getStandardList() {
+        const res = await getStandardList({
           page: this.currentPage,
           size: this.pageSize,
         });
-        this.spectList = res.data.list;
+        this.standardList = res.data.list;
         this.totalCount = res.data.count;
       },
-      async handleCreateSpect() {
-        await createSpect({
-          spect_code: this.form.spect_code,
-          spect_name: this.form.spect_name,
+      async handleCreateStandard() {
+        await createStandard({
+          parameter_code: this.form.parameter_code,
+          parameter_name: this.form.parameter_name,
         });
         this.currentPage = 1;
-        this.getSpectList();
+        this.getStandardList();
       },
-      async handleEditSpect() {
-        const { id } = this.editingSpect;
-        const { spect_name, spect_code } = this.form;
-        await updateSpect({
+      async handleEditStandard() {
+        const { id } = this.editingStandard;
+        const { parameter_code, parameter_name } = this.form;
+        await updateStandard({
           id,
-          spect_code,
-          spect_name,
+          parameter_code,
+          parameter_name,
         });
-        this.getSpectList();
+        this.getStandardList();
       },
       confirmCreateSpect() {
         this.$refs.form.validate(async (valid) => {
           if (valid) {
-            console.log(this.form, "form>>>");
-            if (this.editingSpect) {
-              await this.handleEditSpect();
+            if (this.editingStandard) {
+              await this.handleEditStandard();
             } else {
-              await this.handleCreateSpect();
+              await this.handleCreateStandard();
             }
             this.modalVisible = false;
-            this.editingSpect = null;
+            this.editingStandard = null;
           }
         });
       },

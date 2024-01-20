@@ -16,27 +16,19 @@
         <el-button
           size="small"
           type="primary"
-          @click="handleCreateSpectBtnClick"
+          @click="handleCreateChopperParameterBtnClick"
           >新建斩波器参数</el-button
         >
       </div>
     </div>
     <div class="table">
-      <el-table :data="chopperStandardList">
-        <el-table-column
-          prop="is_show"
-          label="是否展示在首页"
-        ></el-table-column>
+      <el-table :data="spectList">
+        <el-table-column prop="is_show" label="是否展示在首页"></el-table-column>
         <el-table-column prop="show_type" label="展示形式"></el-table-column>
         <el-table-column prop="standard" label="标准参考值"></el-table-column>
-        <el-table-column
-          prop="chopper_code"
-          label="关联斩波器表"
-        ></el-table-column>
-        <el-table-column
-          prop="parameter_code "
-          label="参数编码"
-        ></el-table-column>
+        <el-table-column prop="chopper_code" label="关联斩波器"></el-table-column>
+        <el-table-column prop="parameter_code" label="参数编码"></el-table-column>
+
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button
@@ -76,48 +68,21 @@
           <el-switch size="small" v-model="form.is_show"></el-switch>
         </el-form-item>
         <el-form-item label="展示形式" prop="show_type">
-          <el-select
-            size="small"
-            v-model="form.show_type"
-            placeholder="请选择展现形式"
-          >
-            <el-option
-              v-for="item in showFormatList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+          <el-select size="small" v-model="form.show_type">
+            <el-option v-for="item in showTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="标准参考值" prop="standard">
           <el-input size="small" v-model="form.standard"></el-input>
         </el-form-item>
-        <el-form-item label="关联斩波器" prop="chopper_code">
-          <el-select
-            size="small"
-            v-model="form.chopper_code"
-            placeholder="请选择关联斩波器"
-          >
-            <el-option
-              v-for="item in chopperList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+        <el-form-item label="关联斩波器表" prop="chopper_code">
+          <el-select size="small" v-model="form.chopper_code">
+            <el-option v-for="item in chopperList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="参数编码" prop="parameter_code">
-          <el-select
-            size="small"
-            v-model="form.parameter_code"
-            placeholder="请选择参数编码"
-          >
-            <el-option
-              v-for="item in parameterList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+          <el-select size="small" v-model="form.parameter_code">
+            <el-option v-for="item in parameterList" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -131,15 +96,12 @@
 
 <script>
 import {
-  createSpect,
-  getSpectList,
   deleteSpect,
-  updateSpect,
   searchSpectById,
-} from "@/api/spect"; 
+} from "@/api/spect";
 import { getChopperList } from '@/api/chopper';
-import { getStandardList, createStandard } from "@/api/standarManagement";
-import {} from ''
+import { getStandardList } from '@/api/standarManagement';
+import { createChopperStandard, getChopperStandardList, updateChopperStandard } from '@/api/chopperStandard';
 export default {
   data() {
     return {
@@ -148,26 +110,25 @@ export default {
       popoverVisible: false,
       editingSpect: null,
       form: {
-        is_show: false,
-        // 谱仪名称
+        is_show : false,
         show_type: "",
         standard: "",
         chopper_code: "",
-        parameter_code: "",
+        parameter_code: ""
       },
-      showFormatList: [
+      showTypeOptions: [
         {
           label: "数值",
-          value: "NUM",
+          value: "NUM"
         },
         {
           label: "图表",
-          value: "CHART",
+          value: "CHART"
         },
         {
           label: "状态",
-          value: "STATE",
-        },
+          value: "STATE"
+        }
       ],
       rules: {
         spect_code: [
@@ -185,27 +146,35 @@ export default {
       },
       currentPage: 1,
       pageSize: 15,
-      chopperStandardList: [],
+      spectList: [],
       chopperList: [],
       parameterList: [],
       totalCount: 0,
     };
   },
   mounted() {
-    this.getSpectList();
+    this.getChopperStandardList();
   },
   watch: {
     currentPage(newVal, oldVal) {
-      this.getSpectList();
+      this.getChopperStandardList();
     },
     modalVisible(newVal) {
       if (newVal) {
         this.fetchChopperList();
-        this.fetchStandarList();
+        this.fetchParameterList();
       }
-    },
+    }
   },
   methods: {
+    async fetchParameterList() {
+      const res = await getStandardList({ page: 1, size: 100 });
+      const list = res.data.list || [];
+      this.parameterList = list.map(item => ({
+        label: item.parameter_name,
+        value: item.parameter_code
+      }))
+    },
     async fetchChopperList() {
       const res = await getChopperList({ page: 1, size: 100 });
       const list = res.data.list || [];
@@ -214,18 +183,10 @@ export default {
         value: item.chopper_code,
       }));
     },
-    async fetchStandarList() {
-      const res = await getStandardList({ page: 1, size: 100 });
-      const list = res.data.list || [];
-      this.parameterList = list.map((item) => ({
-        label: item.parameter_name,
-        value: item.parameter_code,
-      }));
-    },
     async searchSpect() {
       if (this.searchText === "") {
         this.currentPage = 1;
-        this.getSpectList();
+        this.getChopperStandardList();
         return;
       }
       const res = await searchSpectById(this.searchText);
@@ -242,18 +203,22 @@ export default {
     async _deleteSpect(id) {
       await deleteSpect({ id });
       this.$info("删除成功");
-      this.getSpectList();
+      this.getChopperStandardList();
     },
     handleCurrentPageChange(currentPage) {
       this.currentPage = currentPage;
     },
-    handleCreateSpectBtnClick() {
+    handleCreateChopperParameterBtnClick() {
       this.modalVisible = true;
     },
-    handleEditSpectBtnClick(spect) {
-      this.editingSpect = spect;
-      this.form.spect_name = spect.spect_name;
-      this.form.spect_code = spect.spect_code;
+    handleEditSpectBtnClick(chopperParameter) {
+      this.editingSpect = chopperParameter;
+      this.form.is_show  = chopperParameter.is_show;
+      this.form.show_type = chopperParameter.show_type;
+      this.form.standard  = chopperParameter.standard ;
+      this.form.chopper_code  = chopperParameter.chopper_code;
+      this.form.parameter_code  = chopperParameter.parameter_code;
+
       this.modalVisible = true;
     },
     handleDeleteSpectBtnClick(spect) {
@@ -265,34 +230,34 @@ export default {
         this._deleteSpect(spect.id);
       });
     },
-    async getSpectList() {
+    async getChopperStandardList() {
       const res = await getChopperStandardList({
         page: this.currentPage,
         size: this.pageSize,
       });
-      this.chopperStandardList = res.data.list;
+      this.spectList = res.data.list;
       this.totalCount = res.data.count;
     },
-    async handleCreateSpect() {
-      await createStandard({
-        is_show : this.form.is_show,
-        show_type : this.form.show_type,
+    async handleCreateChopperParameter() {
+      await createChopperStandard({
+        is_show: this.form.is_show,
+        show_type: this.form.show_type,
         standard: this.form.standard,
         chopper_code: this.form.chopper_code,
-        parameter_code: this.form.parameter_code 
+        parameter_code: this.form.parameter_code,
       });
       this.currentPage = 1;
-      this.getStandardList();
+      this.getChopperStandardList();
     },
     async handleEditSpect() {
       const { id } = this.editingSpect;
       const { spect_name, spect_code } = this.form;
-      await updateSpect({
+      await updateChopperStandard({
         id,
         spect_code,
         spect_name,
       });
-      this.getSpectList();
+      this.getChopperStandardList();
     },
     confirmCreateSpect() {
       this.$refs.form.validate(async (valid) => {
@@ -301,7 +266,7 @@ export default {
           if (this.editingSpect) {
             await this.handleEditSpect();
           } else {
-            await this.handleCreateSpect();
+            await this.handleCreateChopperParameter();
           }
           this.modalVisible = false;
           this.editingSpect = null;
