@@ -134,7 +134,13 @@ export const constantRoutes = [
         component: () => import('@/views/EquipmentManagement/StandardManagement'),
         name: 'standardManagement',
         meta: { title: '参数管理' }
-      }
+      },
+      {
+        path: 'chopper-standard',
+        component: () => import('@/views/EquipmentManagement/StandardManagement'),
+        name: 'chopperStandard',
+        meta: { title: '斩波器参数管理' }
+      },
     ]
   },
   // 404 page must be placed at the end !!!
