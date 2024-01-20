@@ -1,9 +1,4 @@
 import { chunk } from "lodash";
-const StatusColorMap = {
-  success: "#67C23A",
-  warning: "#E6A23C",
-  error: "#F56C6C",
-};
 
 const GroupNum = 20;
 const centerNodeId = "centerNode";
@@ -27,23 +22,25 @@ const originalData = new Array(GroupNum).fill(1).map((_item, outerIndex) => {
 //     }
 //   ]
 // ];
-
-const modifiedNodes = [
-  {
-    id: centerNodeId,
-    x: CenterNodeX,
-    y: CenterNodeY,
-    label: "靶站",
-    size: 100,
-    style: {
-      fill: "#409EFF",
+export function getShapedData({ originalData }) {
+  console.log(originalData, 'originalData');
+  const modifiedNodes = [
+    {
+      id: centerNodeId,
+      x: CenterNodeX,
+      y: CenterNodeY,
+      label: "靶站",
+      size: 100,
+      style: {
+        fill: "#409EFF",
+      },
+      type: "centerNode",
     },
-    type: "centerNode",
-  },
-];
-
-// 将全部数据分成两组，左右对称排列
+  ];
+  // 将全部数据分成两组，左右对称排列
 const chunkedData = chunk(originalData, Math.floor(originalData.length / 2));
+
+
 
 chunkedData.forEach((chopperArr, outerIndex) => {
   switch (outerIndex) {
@@ -61,18 +58,17 @@ chunkedData.forEach((chopperArr, outerIndex) => {
         choppers.forEach((chopper, innerIndex) => {
           // 点与点之间的距离
           edgeDistance = innerIndex === 0 ? 200 : 150;
-          console.log(edgeDistance, 'edgeDistance')
           const currentX =
             (innerIndex + 1) * edgeDistance * Math.cos(curDeg) + CenterNodeX;
           const currentY =
             (innerIndex + 1) * edgeDistance * -Math.sin(curDeg) + CenterNodeY;
-          const { id, label } = chopper;
+          const { id, label, type } = chopper;
           modifiedNodes.push({
             id,
             x: currentX,
             y: currentY,
-            label: innerIndex === 0 ? index + 1 : innerIndex === choppers.length - 1 ? '逆几何分子振动谱仪' : label,
-            type: innerIndex === 0 ? "first-node" : innerIndex === choppers.length - 1 ? 'last-node' : "custom-node",
+            label: label,
+            type: type,
             deg: Math.PI - curDeg,
           });
         });
@@ -96,38 +92,14 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             (innerIndex + 1) * edgeDistance * Math.cos(curDeg) + CenterNodeX;
           const currentY =
             (innerIndex + 1) * edgeDistance * -Math.sin(curDeg) + CenterNodeY;
-          const { id, label } = chopper;
+          const { id, label, type } = chopper;
           modifiedNodes.push({
             id,
             x: currentX,
             y: currentY,
-            label: innerIndex === 0 ? index + chunkedData[0].length + 1 : innerIndex === choppers.length - 1 ? '逆几何分子振动谱仪' : label,
-            type: innerIndex === 0 ? "first-node" : innerIndex === choppers.length - 1 ? 'last-node' : "custom-node",
+            label: label,
+            type: type,
             deg: Math.PI - curDeg,
-          });
-        });
-      });
-      break;
-      // 第一组数据从x轴负轴顺时针旋转
-      chopperArr.forEach((choppers, index) => {
-        const length = chopperArr.length;
-        const totalDeg = Math.PI / 2 - Math.PI / 6;
-        const avgDeg =
-          choppers.length - 2 > 0 ? totalDeg / (choppers.length - 2) : totalDeg;
-        const curDeg = index === length - 1 ? totalDeg : (index + 1) * avgDeg;
-        choppers.forEach((chopper, innerIndex) => {
-          const currentX =
-            (innerIndex + 1) * 200 * -Math.cos(curDeg) + CenterNodeX;
-          const currentY =
-            (innerIndex + 1) * 200 * -Math.sin(curDeg) + CenterNodeY;
-          const { id, label } = chopper;
-          modifiedNodes.push({
-            id,
-            x: currentX,
-            y: currentY,
-            label: innerIndex === 0 ? index : label,
-            type: innerIndex === 0 ? "first-node" : "custom-node",
-            deg: curDeg,
           });
         });
       });
@@ -149,10 +121,6 @@ originalData.forEach((itemArr) => {
         style: {
           // width: 50,
         },
-        // 该边连入 source 点的第 0 个 anchorPoint，
-        // sourceAnchor: 0,
-        // // 该边连入 target 点的第 0 个 anchorPoint，
-        // targetAnchor: 0,
       });
     } else {
       edges.push({
@@ -168,7 +136,15 @@ originalData.forEach((itemArr) => {
   });
 });
 
-export default {
-  edges: edges,
+return {
   nodes: modifiedNodes,
-};
+  edges: edges
+}
+}
+
+
+
+// export default {
+//   edges: edges,
+//   nodes: modifiedNodes,
+// };

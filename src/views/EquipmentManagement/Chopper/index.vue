@@ -98,7 +98,7 @@
           <el-input size="small" v-model="form.chopper_code"></el-input>
         </el-form-item>
         <el-form-item label="斩波器名称" prop="chopper_name">
-          <el-input size="small" v-model="form.chopper_name"></el-input>other
+          <el-input size="small" v-model="form.chopper_name"></el-input>
         </el-form-item>
         <el-form-item label="是否在役" prop="is_in_service">
           <el-switch size="small" v-model="form.is_in_service"></el-switch>
@@ -203,6 +203,8 @@ export default {
     modalVisible(newVal, oldVal) {
       if (newVal) {
         this.fetchSpectList();
+      } else {
+        this.editingChopper = false;
       }
     },
   },

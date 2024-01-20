@@ -10,11 +10,14 @@
 
 <script>
 import G6 from "@antv/g6";
-import mockData from "@/mock/chopper";
-import { getAlgorithmList } from '@/api/algorithm';
+import { getShapedData } from "@/mock/chopper";
+import { getSpectList } from '@/api/spect';
+import { getChopperList } from '@/api/chopper';
+import { groupBy } from 'lodash';
 export default {
   async mounted() {
-    const { edges, nodes } = mockData;
+    const { edges, nodes } = await this.fetchSpectList();
+    console.log(nodes, 'nodes>>>', edges)
     G6.registerNode("centerNode", {
       draw: (_cfg, group) => {
         const keyShape = group.addShape("rect", {
@@ -310,9 +313,56 @@ export default {
 
     graph.render();
 
-    const res = await getAlgorithmList({ page: 1 });
   },
   methods: {
+    async fetchSpectList() {
+      const spectData = await getSpectList({
+        page: 1,
+        size: 100
+      });
+      const chopperData = await getChopperList({
+        page: 1,
+        size: 100
+      });
+      const sepectList = spectData.data.list || [];
+      const chopperList = chopperData.data.list || [];
+      const groupedChopper = groupBy(chopperList, 'spect_code');
+      const originalData = [];
+      Object.keys(groupedChopper).forEach((key, index) => {
+        const choppers = groupedChopper[key];
+        console.log(choppers, 'choppers>>>', choppers.map((chopper, innerIndex) => ({
+            id: chopper.chopper_code,
+            type: 'custom-node',
+            label: `T${innerIndex}`,
+            ...chopper
+          })));
+        const currentSpect = sepectList.find(spect => choppers[0].spect_code === spect.spect_code);
+        let chopperArr = [];
+        chopperArr.push({
+          type: 'first-node',
+          label: index + 1,
+          id: `${index+1}`
+        });
+        chopperArr = [
+          ...chopperArr,
+          ...choppers.map((chopper, innerIndex) => ({
+            type: 'custom-node',
+            label: `T${innerIndex}`,
+            ...chopper,
+            id: chopper.chopper_code,
+          })),
+          {
+            id: currentSpect.spect_code,
+            label: currentSpect.spect_name,
+            type: 'last-node'
+          }
+        ];
+        originalData.push(chopperArr);
+
+      })
+      return getShapedData({ originalData });
+      // console.log('res>>>', originalData, 'spect_code', chopperList);
+    },
     handleNodeClick(evt) {
       const id = evt.item._cfg.id;
       this.$router.push({
