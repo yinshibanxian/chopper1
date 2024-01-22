@@ -10,7 +10,7 @@
   .sidebar-container {
     transition: width 0.28s;
     width: $sideBarWidth !important;
-    background-color: $menuBg;
+    background-color: rgba(29, 67, 84, 1);
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -72,9 +72,15 @@
     .submenu-title-noDropdown,
     .el-submenu__title {
       &:hover {
-        background-color: $menuHover !important;
+        background-color: rgba(29, 67, 84, 1) !important;
       }
+      background-color: rgba(29, 67, 84, 1);
     }
+
+    .el-submenu__title {
+      background-color: rgba(29, 67, 84, 1) !important;
+    }
+
 
     .is-active>.el-submenu__title {
       color: $subMenuActiveText !important;
@@ -83,11 +89,14 @@
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
       min-width: $sideBarWidth !important;
-      background-color: $subMenuBg !important;
+      background-color: rgba(29, 67, 84, 1)  !important;
 
       &:hover {
-        background-color: $subMenuHover !important;
+        background-color: rgba(29, 67, 84, 1)  !important;
       }
+    }
+    .el-menu-item.is-active {
+      background-color: rgba(29, 67, 84, 1) !important;
     }
   }
 

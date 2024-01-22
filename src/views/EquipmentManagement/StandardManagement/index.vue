@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="table">
-        <el-table :data="standardList">
+        <el-table :data="standardList" class="parameter-table">
           <el-table-column prop="parameter_code" label="参数编码"></el-table-column>
           <el-table-column prop="parameter_name" label="参数名称"></el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
@@ -207,6 +207,7 @@
   </script>
   
   <style lang="scss" scoped>
+
   .app-container {
     .header {
       display: flex;
@@ -240,5 +241,40 @@
   .el-input__inner {
     width: 200px;
   }
+  .parameter-table {
+    td {
+      background: rgba(29, 67, 84, 1);
+      border-bottom: none;
+      color: #fff;
+    }
+    th {
+      background: rgba(29, 67, 84, 1);
+      border-bottom: none;
+      color: #fff;
+    }
+    border: none;
+    
+  }
+  .el-pagination {
+    .btn-prev {
+      background: transparent !important;
+    }
+    .el-pager {
+      background: transparent !important;
+      .number {
+        background: transparent;
+      }
+      .btn-next {
+        background: transparent !important;
+      }
+     
+    }
+
+  }
+  .el-pagination button:disabled {
+      color: #C0C4CC;
+      background-color: transparent !important;
+      cursor: not-allowed;
+    }
   </style>
   

@@ -24,6 +24,10 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  background-image: url("../../assets/images/big-board-bg1.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 100% 100%;
 }
 .fixed-header+.app-main {
   padding-top: 50px;

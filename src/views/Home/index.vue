@@ -291,8 +291,8 @@ export default {
     
     
     const graph = new G6.Graph({
-      width: document.body.clientWidth,
-      height: document.body.clientHeight,
+      width: document.body.clientWidth + 200,
+      height: document.body.clientHeight + 200,
       container: "container",
       linkCenter: true,
       fitCenter: true,
@@ -376,7 +376,6 @@ export default {
 
 <style lang="scss" scoped>
 .content {
-  background: rgba(77, 102, 165, 1);
   height: 100%;
   width: 100%;
   .title-wrapper {
