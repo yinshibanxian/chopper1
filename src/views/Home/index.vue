@@ -10,14 +10,13 @@
 
 <script>
 import G6 from "@antv/g6";
-import { getShapedData } from "@/mock/chopper";
+import { getShapedData, CenterNodeX, CenterNodeY } from "@/mock/chopper";
 import { getSpectList } from '@/api/spect';
 import { getChopperList } from '@/api/chopper';
 import { groupBy } from 'lodash';
 export default {
   async mounted() {
     const { edges, nodes } = await this.fetchSpectList();
-    console.log(nodes, 'nodes>>>', edges)
     G6.registerNode("centerNode", {
       draw: (_cfg, group) => {
         const keyShape = group.addShape("rect", {
@@ -105,7 +104,7 @@ export default {
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
             const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg || Math.PI / 2],
+              ["r", cfg.deg - Math.PI / 2],
             ]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
@@ -170,7 +169,7 @@ export default {
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
             const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg || Math.PI / 2],
+              ["r", cfg.deg + Math.PI / 2],
             ]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
@@ -195,7 +194,7 @@ export default {
 
     G6.registerNode('last-node', {
       draw(cfg, group) {
-        const size = [160, 40];
+        const size = [140, 40];
         const keyShape = group.addShape('rect', {
           attrs: {
             width: size[0],
@@ -231,7 +230,7 @@ export default {
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
             const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg || Math.PI / 2],
+              ["r", cfg.deg],
             ]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
@@ -251,9 +250,10 @@ export default {
             // 旋转通过矩阵来实现
             // 当前矩阵
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+            console.log(cfg, 'cfg', cfg.label)
             // 目标矩阵
             const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg || Math.PI / 2],
+              ["r", cfg.deg],
             ]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
@@ -291,11 +291,13 @@ export default {
     
     
     const graph = new G6.Graph({
-      width: document.body.clientWidth + 200,
-      height: document.body.clientHeight + 200,
+      width: document.body.clientWidth - 200,
+      height: document.body.clientHeight - 30,
       container: "container",
       linkCenter: true,
+      fitViewPadding: 10,
       fitCenter: true,
+      fitView: true,
       modes: {
         default: ["drag-canvas", "zoom-canvas"],
       },
@@ -309,9 +311,14 @@ export default {
       edges,
     });
 
+
     graph.on("node:click", this.handleNodeClick);
 
     graph.render();
+
+    graph.zoom(0.8, { x: CenterNodeX, y: CenterNodeY}, false);
+
+    graph.translate(0, -50)
 
   },
   methods: {
@@ -330,12 +337,6 @@ export default {
       const originalData = [];
       Object.keys(groupedChopper).forEach((key, index) => {
         const choppers = groupedChopper[key];
-        console.log(choppers, 'choppers>>>', choppers.map((chopper, innerIndex) => ({
-            id: chopper.chopper_code,
-            type: 'custom-node',
-            label: `T${innerIndex}`,
-            ...chopper
-          })));
         const currentSpect = sepectList.find(spect => choppers[0].spect_code === spect.spect_code);
         let chopperArr = [];
         chopperArr.push({
@@ -380,9 +381,9 @@ export default {
   width: 100%;
   .title-wrapper {
     color: #fff;
-    line-height: 30px;
+    // line-height: 30px;
     padding-left: 28px;
-    padding-top: 30px;
+    padding-top: 12px;
     .english-title {
       font-size: 24px;
       font-weight: bold;

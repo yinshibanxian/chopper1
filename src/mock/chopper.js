@@ -1,29 +1,10 @@
 import { chunk } from "lodash";
 
-const GroupNum = 20;
 const centerNodeId = "centerNode";
-const CenterNodeX = document.body.clientWidth / 2;
-const CenterNodeY = document.body.clientHeight / 2;
+export const CenterNodeX = document.body.clientWidth / 2;
+export const CenterNodeY = document.body.clientHeight / 2;
 
-const originalData = new Array(GroupNum).fill(1).map((_item, outerIndex) => {
-  return new Array(4).fill(1).map((_index, innerIndex) => {
-    return {
-      id: `${outerIndex}-${innerIndex}`,
-      label: `T${innerIndex}`,
-      status: 1,
-    };
-  });
-});
-
-// const originData = [
-//   [
-//     {
-//       id: ''
-//     }
-//   ]
-// ];
 export function getShapedData({ originalData }) {
-  console.log(originalData, 'originalData');
   const modifiedNodes = [
     {
       id: centerNodeId,
@@ -40,6 +21,8 @@ export function getShapedData({ originalData }) {
   // 将全部数据分成两组，左右对称排列
 const chunkedData = chunk(originalData, Math.floor(originalData.length / 2));
 
+console.log(chunkedData, 'chunkData');
+
 
 
 chunkedData.forEach((chopperArr, outerIndex) => {
@@ -51,13 +34,13 @@ chunkedData.forEach((chopperArr, outerIndex) => {
         const totalDeg = (Math.PI / 2 - Math.PI / 6) * 2;
         const startDeg = -Math.PI / 2 + Math.PI / 6;
         const endDeg = Math.PI / 2 - Math.PI / 6;
-        const avgDeg = length - 2 > 0 ? totalDeg / (length - 2) : totalDeg;
+        const avgDeg = length - 2 > 0 ? totalDeg / (length - 1) : totalDeg;
         const curDeg =
           index === length - 1 ? endDeg : startDeg + index * avgDeg;
         let edgeDistance;
         choppers.forEach((chopper, innerIndex) => {
           // 点与点之间的距离
-          edgeDistance = innerIndex === 0 ? 200 : 150;
+          edgeDistance = innerIndex === 0 ? 120 : 150;
           const currentX =
             (innerIndex + 1) * edgeDistance * Math.cos(curDeg) + CenterNodeX;
           const currentY =
@@ -81,13 +64,13 @@ chunkedData.forEach((chopperArr, outerIndex) => {
         const totalDeg = (Math.PI / 2 - Math.PI / 6) * 2;
         const startDeg = Math.PI / 2 + Math.PI / 6;
         const endDeg = (2 * Math.PI * 3) / 4 - Math.PI / 6;
-        const avgDeg = totalDeg / (length - 2);
+        const avgDeg = totalDeg / (length - 1);
         const curDeg =
           index === length - 1 ? endDeg : startDeg + index * avgDeg;
         // 点与点之间的距离
         let edgeDistance;
         choppers.forEach((chopper, innerIndex) => {
-          edgeDistance = innerIndex === 0 ? 200 : 150;
+          edgeDistance = innerIndex === 0 ? 120 : 150;
           const currentX =
             (innerIndex + 1) * edgeDistance * Math.cos(curDeg) + CenterNodeX;
           const currentY =
@@ -107,7 +90,6 @@ chunkedData.forEach((chopperArr, outerIndex) => {
   }
 });
 
-console.log(modifiedNodes, 'modifiedNodes')
 
 const edges = [];
 
