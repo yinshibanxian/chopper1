@@ -73,6 +73,13 @@
           </div>
         </div>
       </div>
+      <div class="chopper-statistic">
+        <div class="title">数据统计</div>
+        <div class="charts-wrapper">
+          <div class="chart-wrapper" id="chart4"></div>
+          <div class="chart-wrapper" id="chart5"></div>
+        </div>
+      </div>
       <div class="chopper-trend-wrapper">
         <div class="title">趋势分析</div>
         <div class="charts-wrapper">
@@ -83,19 +90,24 @@
       </div>
     </div>
   </div>
-</template> 
+</template>
 
 <script>
 import * as echarts from "echarts";
+
 export default {
   mounted() {
+    const { id, type } = this.$route.query;
+    this.id = id;
+    this.type = type;
     this.refreshCurrentTimeTimer = setInterval(() => {
       this.currentTime = this.$dayjs();
     }, 1000);
-    this.initChart('chart1');
-    this.initChart('chart2');
-    this.initChart('chart3');
-    
+    this.initChart("chart1");
+    this.initChart("chart2");
+    this.initChart("chart3");
+    this.initPieChart();
+    this.initBarChart();
   },
   computed: {
     refreshCurrenTime: function () {
@@ -105,6 +117,7 @@ export default {
   methods: {
     initChart(id) {
       const firstChart = echarts.init(document.getElementById(id));
+      // 自定义 tooltip 样式
       const option = {
         title: {
           text: "T1斩波器相位误差/°",
@@ -113,11 +126,15 @@ export default {
             color: "#00F2FF",
           },
         },
+        tooltip: {
+          trigger: "axis",
+          color: "#3dc579",
+        },
         legend: {
           data: ["mr_chop_pv"],
           top: 24,
           right: 0,
-          icon: 'rect',
+          icon: "rect",
           fontWeight: 400,
           textStyle: {
             color: "rgba(255, 255, 255, .65)",
@@ -129,11 +146,11 @@ export default {
             },
           },
           itemStyle: {
-            color: '#3dc579'
-          }
+            color: "#3dc579",
+          },
         },
         xAxis: {
-          type: 'category',
+          type: "category",
           data: ["16:00", "17:00", "18:00", "19:00", "20:00"],
           axisLine: {
             lineStyle: {
@@ -172,7 +189,7 @@ export default {
             type: "line",
             smooth: true,
             name: "mr_chop_pv",
-            symbol: 'none',
+            symbol: "none",
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                 {
@@ -186,8 +203,8 @@ export default {
               ]),
             },
             lineStyle: {
-              color: '#3dc579'
-            }
+              color: "#3dc579",
+            },
           },
         ],
         grid: {
@@ -199,6 +216,90 @@ export default {
       };
       firstChart.setOption(option);
     },
+    initPieChart() {
+      const option = {
+        title: {
+          text: "斩波器状态分布",
+          left: "center",
+          top: "center",
+        },
+        series: [
+          {
+            type: "pie",
+            data: [
+              {
+                value: 7,
+                name: "达标",
+              },
+              {
+                value: 2,
+                name: "报警",
+              },
+              {
+                value: 1,
+                name: "故障",
+              },
+            ],
+            radius: ["50%", "90%"],
+          },
+        ],
+        label: {
+          show: true,
+          formatter: "{b}: {c}",
+        },
+      };
+      const pieChart = echarts.init(document.getElementById("chart4"));
+      pieChart.setOption(option);
+    },
+    initBarChart() {
+
+      const option = {
+        title: {
+          text: "斩波器报警次数",
+          textStyle: {
+            fontSize: 14,
+            color: "#00F2FF",
+          },
+        },
+        xAxis: {
+          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          axisTick: {
+            show: false,
+          },
+        },
+        yAxis: {
+          splitLine: {
+            show: false,
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#00B7FD",
+              opacity: 0.5,
+            },
+          },
+          axisLabel: {
+            color: "#fff",
+            opacity: 0.45,
+          },
+        },
+        series: [
+          {
+            type: "bar",
+            data: [23, 24, 18, 25, 27, 28, 25],
+            orient: "horizontal",
+          },
+        ],
+        grid: {
+          left: 0,
+          right: 0,
+          bottom: 0,
+          containLabel: true,
+        },
+      };
+      const barChart = echarts.init(document.getElementById("chart5"));
+      barChart.setOption(option);
+    },
   },
   beforeDestroy() {
     this.refreshCurrentTimeTimer && clearInterval(this.refreshCurrentTimeTimer);
@@ -207,6 +308,8 @@ export default {
     return {
       currentTime: this.$dayjs(),
       refreshCurrentTimeTimer: null,
+      type: "custom-node",
+      id: null,
     };
   },
 };
@@ -303,6 +406,7 @@ $design_height: 1080;
     padding: 24px;
     box-sizing: border-box;
     padding: 16px;
+    overflow: scroll;
     .chopper-status-wrapper {
       width: 100%;
       .chopper-main-status {
@@ -426,6 +530,26 @@ $design_height: 1080;
       }
     }
 
+    .chopper-statistic {
+      margin-top: 32px;
+      .title {
+        font-size: 24px;
+        color: #00f2ff;
+        line-height: 32px;
+        font-weight: 600;
+      }
+      .charts-wrapper {
+        margin-top: 32px;
+        width: 100%;
+        display: flex;
+        .chart-wrapper {
+          flex: 1;
+          height: 300px;
+          margin-right: 16px;
+        }
+      }
+    }
+
     .chopper-trend-wrapper {
       margin-top: 32px;
       .title {
@@ -479,5 +603,4 @@ $design_height: 1080;
 .el-select-dropdown {
   background: rgb(2, 12, 12);
 }
-
 </style>

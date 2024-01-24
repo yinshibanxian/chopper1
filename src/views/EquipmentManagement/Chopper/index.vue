@@ -300,7 +300,6 @@ export default {
         error_color,
         spect_code,
       } = this.form;
-      console.log(this.form, 'form>>>');
       await updateChopper({
         id,
         chopper_name,

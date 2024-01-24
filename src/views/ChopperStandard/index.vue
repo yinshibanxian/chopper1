@@ -262,7 +262,6 @@ export default {
     confirmCreateSpect() {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
-          console.log(this.form, "form>>>");
           if (this.editingSpect) {
             await this.handleEditSpect();
           } else {

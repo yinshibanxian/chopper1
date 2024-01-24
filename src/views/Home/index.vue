@@ -11,9 +11,9 @@
 <script>
 import G6 from "@antv/g6";
 import { getShapedData, CenterNodeX, CenterNodeY } from "@/mock/chopper";
-import { getSpectList } from '@/api/spect';
-import { getChopperList } from '@/api/chopper';
-import { groupBy } from 'lodash';
+import { getSpectList } from "@/api/spect";
+import { getChopperList } from "@/api/chopper";
+import { groupBy } from "lodash";
 export default {
   async mounted() {
     const { edges, nodes } = await this.fetchSpectList();
@@ -79,21 +79,23 @@ export default {
             fill: "#49af43",
             radius: size[1] / 2,
             text: cfg.label,
+            cursor: 'pointer'
           },
           draggable: true,
           name: "custom-node-keyshape",
         });
 
-        const border = group.addShape('rect', {
+        const border = group.addShape("rect", {
           attrs: {
             x: -size[0] / 2 + 10,
             y: -size[1] / 2 + 5,
             width: size[0] - 20,
             height: size[1] - 10,
-            stroke: '#438e63',
+            stroke: "#438e63",
             lineWidth: 1,
-            fill: '#49af43'
-          }
+            fill: "#49af43",
+            cursor: 'pointer'
+          },
         });
 
         border.animate(
@@ -125,8 +127,9 @@ export default {
             y: 0,
             fontWeight: 400,
             textAlign: "center",
-            textBaseline: 'middle',
+            textBaseline: "middle",
             fontSize: 10,
+            cursor: 'pointer'
           },
           afterDraw() {
             // 调整文本到节点中心
@@ -192,24 +195,25 @@ export default {
       },
     });
 
-    G6.registerNode('last-node', {
+    G6.registerNode("last-node", {
       draw(cfg, group) {
         const size = [140, 40];
-        const keyShape = group.addShape('rect', {
+        const keyShape = group.addShape("rect", {
           attrs: {
             width: size[0],
             height: size[1],
             x: -size[0] / 2,
             y: -size[1] / 2,
             text: cfg.label,
-            fill: '#fff',
-            stroke: '#f08c25',
+            fill: "#fff",
+            stroke: "#f08c25",
             lineDash: [4, 4],
-            radius: size[1] / 2
-          }
+            radius: size[1] / 2,
+            cursor: 'pointer'
+          },
         });
 
-        const textShape = group.addShape('text', {
+        const textShape = group.addShape("text", {
           attrs: {
             text: cfg.label,
             fill: "#f08c25",
@@ -217,9 +221,10 @@ export default {
             y: 0,
             fontWeight: 400,
             textAlign: "center",
-            textBaseline: 'middle',
+            textBaseline: "middle",
             fontSize: 14,
-          }
+            cursor: 'pointer'
+          },
         });
 
         textShape.animate(
@@ -229,9 +234,7 @@ export default {
             // 当前矩阵
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
-            const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg],
-            ]);
+            const toMatrix = G6.Util.transform(matrix, [["r", cfg.deg]]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
               matrix: toMatrix,
@@ -250,11 +253,8 @@ export default {
             // 旋转通过矩阵来实现
             // 当前矩阵
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-            console.log(cfg, 'cfg', cfg.label)
             // 目标矩阵
-            const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg],
-            ]);
+            const toMatrix = G6.Util.transform(matrix, [["r", cfg.deg]]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
               matrix: toMatrix,
@@ -268,8 +268,8 @@ export default {
         );
 
         return keyShape;
-      }
-    })
+      },
+    });
 
     G6.registerEdge("custom-edge", {
       draw(cfg, group) {
@@ -288,8 +288,7 @@ export default {
         return keyShape;
       },
     });
-    
-    
+
     const graph = new G6.Graph({
       width: document.body.clientWidth - 200,
       height: document.body.clientHeight - 30,
@@ -311,43 +310,64 @@ export default {
       edges,
     });
 
-
     graph.on("node:click", this.handleNodeClick);
+
+    graph.on("node:mouseenter", (evt) => {
+      const { item } = evt;
+      const keyShape = item.getKeyShape();
+      const tooltipElement = item
+        .get("group")
+        .find((element) => element.get("className") === "g6-tooltip");
+      if (tooltipElement) {
+        tooltipElement.addClass("g6-tooltip");
+      }
+    });
+
+    graph.on("node:mouseleave", (evt) => {
+      const { item } = evt;
+      const tooltipElement = item
+        .get("group")
+        .find((element) => element.get("className") === "g6-tooltip");
+      if (tooltipElement) {
+        tooltipElement.removeClass("g6-tooltip");
+      }
+    });
 
     graph.render();
 
-    graph.zoom(0.8, { x: CenterNodeX, y: CenterNodeY}, false);
+    graph.zoom(0.8, { x: CenterNodeX, y: CenterNodeY }, false);
 
-    graph.translate(0, -50)
-
+    graph.translate(0, -50);
   },
   methods: {
     async fetchSpectList() {
       const spectData = await getSpectList({
         page: 1,
-        size: 100
+        size: 100,
       });
       const chopperData = await getChopperList({
         page: 1,
-        size: 100
+        size: 100,
       });
       const sepectList = spectData.data.list || [];
       const chopperList = chopperData.data.list || [];
-      const groupedChopper = groupBy(chopperList, 'spect_code');
+      const groupedChopper = groupBy(chopperList, "spect_code");
       const originalData = [];
       Object.keys(groupedChopper).forEach((key, index) => {
         const choppers = groupedChopper[key];
-        const currentSpect = sepectList.find(spect => choppers[0].spect_code === spect.spect_code);
+        const currentSpect = sepectList.find(
+          (spect) => choppers[0].spect_code === spect.spect_code
+        );
         let chopperArr = [];
         chopperArr.push({
-          type: 'first-node',
+          type: "first-node",
           label: index + 1,
-          id: `${index+1}`
+          id: `${index + 1}`,
         });
         chopperArr = [
           ...chopperArr,
           ...choppers.map((chopper, innerIndex) => ({
-            type: 'custom-node',
+            type: "custom-node",
             label: `T${innerIndex}`,
             ...chopper,
             id: chopper.chopper_code,
@@ -355,20 +375,22 @@ export default {
           {
             id: currentSpect.spect_code,
             label: currentSpect.spect_name,
-            type: 'last-node'
-          }
+            type: "last-node",
+          },
         ];
         originalData.push(chopperArr);
-
-      })
+      });
       return getShapedData({ originalData });
       // console.log('res>>>', originalData, 'spect_code', chopperList);
     },
     handleNodeClick(evt) {
       const id = evt.item._cfg.id;
+      if (evt.item._cfg.currentShape === "first-node") {
+        return;
+      }
       this.$router.push({
         path: "/chopper-detail",
-        query: { id },
+        query: { id, type: evt.item._cfg.currentShape },
       });
     },
   },
@@ -393,5 +415,10 @@ export default {
       align-items: center;
     }
   }
+}
+</style>
+<style lang="scss">
+.g6-tooltip {
+  cursor: pointer;
 }
 </style>
