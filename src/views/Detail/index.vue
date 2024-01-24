@@ -81,7 +81,17 @@
         </div>
       </div>
       <div class="chopper-trend-wrapper">
-        <div class="title">趋势分析</div>
+        <div class="title">
+          <div>趋势分析</div>
+          <div class="filter" v-if="type === 'last-node'">
+            <el-select placeholder="" popper-class="filter-popper" value="斩波器1">
+              <el-option value="斩波器1">斩波器1</el-option>
+              <el-option value="斩波器1">斩波器2</el-option>
+              <el-option value="斩波器1">斩波器3</el-option>
+              <el-option value="斩波器1">斩波器4</el-option>
+            </el-select>
+          </div>
+        </div>
         <div class="charts-wrapper">
           <div class="chart-wrapper" id="chart1"></div>
           <div class="chart-wrapper" id="chart2"></div>
@@ -252,7 +262,6 @@ export default {
       pieChart.setOption(option);
     },
     initBarChart() {
-
       const option = {
         title: {
           text: "斩波器报警次数",
@@ -557,6 +566,28 @@ $design_height: 1080;
         color: #00f2ff;
         line-height: 32px;
         font-weight: 600;
+        display: flex;
+        position: relative;
+        align-items: center;
+        .filter {
+          position: absolute;
+          right: 80px;
+          background-image: url("../../assets/svgs/detail-header-filter.svg");
+          background-repeat: no-repeat;
+          background-position: 0 0;
+          background-size: 100% 100%;
+          height: 30px;
+          width: 166px;
+          display: flex;
+          align-items: center;
+          margin-left: 24px;
+          padding-left: 10px;
+          padding-right: 10px;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
       }
 
       .charts-wrapper {
