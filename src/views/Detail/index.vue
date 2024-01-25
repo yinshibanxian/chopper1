@@ -84,7 +84,11 @@
         <div class="title">
           <div>趋势分析</div>
           <div class="filter" v-if="type === 'last-node'">
-            <el-select placeholder="" popper-class="filter-popper" value="斩波器1">
+            <el-select
+              placeholder=""
+              popper-class="filter-popper"
+              value="斩波器1"
+            >
               <el-option value="斩波器1">斩波器1</el-option>
               <el-option value="斩波器1">斩波器2</el-option>
               <el-option value="斩波器1">斩波器3</el-option>
@@ -262,6 +266,18 @@ export default {
       pieChart.setOption(option);
     },
     initBarChart() {
+      const tooltipFormatter = (params) => {
+        let tooltip = `${params[0].name}<br>`;
+        tooltip += `
+                  <div style="width:232px;height:25px;line-height:12px;margin-top:10px;">
+                    <div style="display: inline-block;width:12px;height:12px;background-color:rgba(0, 188, 255, 1);"/>
+                    <div style="display: inline-block;line-height:12px;margin-left:20px;margin-bottom:10px;">
+                    ${params[0].value}<br>
+                    </div>
+                  <div>
+                  `;
+        return tooltip;
+      };
       const option = {
         title: {
           text: "斩波器报警次数",
@@ -271,14 +287,21 @@ export default {
           },
         },
         xAxis: {
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          data: ["斩波器1", "斩波器2", "斩波器3", "斩波器4", "斩波器5", "斩波器6", "斩波器7"],
           axisTick: {
             show: false,
           },
         },
+        tooltip: {
+          trigger: "axis", // 设置触发类型为坐标轴轴线触发
+          formatter: tooltipFormatter,
+        },
         yAxis: {
           splitLine: {
-            show: false,
+            show: true,
+            lineStyle: {
+              color: "rgba(0, 183, 253, .2)",
+            },
           },
           axisLine: {
             show: true,
@@ -296,7 +319,32 @@ export default {
           {
             type: "bar",
             data: [23, 24, 18, 25, 27, 28, 25],
-            orient: "horizontal",
+            barWidth: 12,
+            itemStyle: {
+              emphasis: {
+                barBorderRadius: [10, 10, 10, 10],
+              },
+              normal: {
+                barBorderRadius: [10, 10, 0, 0],
+                color: new echarts.graphic.LinearGradient(
+                  0,
+                  1,
+                  0,
+                  0,
+                  [
+                    {
+                      offset: 0,
+                      color: "rgba(0, 71, 255, 1)", // 0% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: "rgba(0, 188, 255, 1)", // 100% 处的颜色
+                    },
+                  ],
+                  false
+                ),
+              },
+            },
           },
         ],
         grid: {
