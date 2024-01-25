@@ -18,58 +18,58 @@
     <div class="body">
       <div class="chopper-status-wrapper">
         <div class="chopper-main-status">
-          <div class="title">T1 斩波器状态监测</div>
+          <div class="title">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}状态监测</div>
           <div class="main-status">
             <div class="main-status-item">
               <div class="status">正常</div>
-              <div class="status-desc">T1斩波器是否启动</div>
+              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}是否启动</div>
             </div>
             <div class="main-status-item">
               <div class="status">达标</div>
-              <div class="status-desc">T1斩波器相位控制是否达标</div>
+              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制是否达标</div>
             </div>
             <div class="main-status-item">
               <div class="status">正常</div>
-              <div class="status-desc">T1斩波器电机电流报警</div>
+              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}电机电流报警</div>
             </div>
             <div class="main-status-item">
               <div class="status">正常</div>
-              <div class="status-desc">T1斩波器振动报警</div>
+              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}振动报警</div>
             </div>
             <div class="main-status-item">
               <div class="status">正常</div>
-              <div class="status-desc">T1斩波器超差报警</div>
+              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}超差报警</div>
             </div>
           </div>
         </div>
         <div class="chopper-sub-status">
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">26</div>
-            <div class="sub-status-desc">T1斩波器设定速度</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定速度</div>
           </div>
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">7722μs</div>
-            <div class="sub-status-desc">T1斩波器设定相位</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定相位</div>
           </div>
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">7721μs</div>
-            <div class="sub-status-desc">T1斩波器实际相位</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}实际相位</div>
           </div>
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">3.20°</div>
-            <div class="sub-status-desc">T1斩波器设定TDC角度</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定TDC角度</div>
           </div>
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">100.0%</div>
-            <div class="sub-status-desc">T1斩波器相位控制达标百分比</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制达标百分比</div>
           </div>
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">0.15A</div>
-            <div class="sub-status-desc">T1斩波器电机电流</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}电机电流</div>
           </div>
           <div class="chopper-sub-status-item">
             <div class="sub-status-num">26</div>
-            <div class="sub-status-desc">T1斩波器设定速度</div>
+            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定速度</div>
           </div>
         </div>
       </div>
@@ -280,14 +280,14 @@ export default {
       };
       const option = {
         title: {
-          text: "斩波器报警次数",
+          text: "斩波器报警次数（Top 5)",
           textStyle: {
             fontSize: 14,
             color: "#00F2FF",
           },
         },
         xAxis: {
-          data: ["斩波器1", "斩波器2", "斩波器3", "斩波器4", "斩波器5", "斩波器6", "斩波器7"],
+          data: ["斩波器1", "斩波器2", "斩波器3", "斩波器4", "斩波器5"],
           axisTick: {
             show: false,
           },
@@ -318,7 +318,7 @@ export default {
         series: [
           {
             type: "bar",
-            data: [23, 24, 18, 25, 27, 28, 25],
+            data: [23, 24, 18, 25, 27],
             barWidth: 12,
             itemStyle: {
               emphasis: {

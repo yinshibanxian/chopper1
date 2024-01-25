@@ -205,7 +205,7 @@ export default {
             x: -size[0] / 2,
             y: -size[1] / 2,
             text: cfg.label,
-            fill: "#fff",
+            fill: "#f08619",
             stroke: "#f08c25",
             lineDash: [4, 4],
             radius: size[1] / 2,
@@ -216,7 +216,7 @@ export default {
         const textShape = group.addShape("text", {
           attrs: {
             text: cfg.label,
-            fill: "#f08c25",
+            fill: "#fff",
             x: 0,
             y: 0,
             fontWeight: 400,
