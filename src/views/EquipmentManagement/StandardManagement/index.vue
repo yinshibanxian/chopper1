@@ -2,7 +2,7 @@
     <div class="app-container">
       <div class="header">
         <div class="filter">
-          <el-input
+          <!-- <el-input
             size="small"
             class="search-input"
             placeholder="请输入谱仪ID"
@@ -10,7 +10,7 @@
           />
           <el-button size="small" type="primary" @click="searchSpect"
             >搜索</el-button
-          >
+          > -->
         </div>
         <div class="operate-btn">
           <el-button

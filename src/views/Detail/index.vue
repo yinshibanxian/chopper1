@@ -8,7 +8,7 @@
           {{ refreshCurrenTime }}
         </div>
         <div class="filter">
-          <el-select placeholder="" popper-class="filter-popper" value="24h">
+          <el-select placeholder="" popper-class="filter-popper" value="24h" class="custom-select">
             <el-option value="24h">24h</el-option>
           </el-select>
         </div>
@@ -88,6 +88,7 @@
               placeholder=""
               popper-class="filter-popper"
               value="斩波器1"
+               class="custom-select"
             >
               <el-option value="斩波器1">斩波器1</el-option>
               <el-option value="斩波器1">斩波器2</el-option>
@@ -96,9 +97,12 @@
             </el-select>
           </div>
         </div>
+      
+        <!-- <el-input class="test-input" placeholder="aa" style="z-index: 10000;background: #fff;"></el-input> -->
         <div class="charts-wrapper">
           <div class="chart-wrapper" id="chart1"></div>
-          <div class="chart-wrapper" id="chart2"></div>
+          <div class="chart-wrapper" id="chart2">
+          </div>
           <div class="chart-wrapper" id="chart3"></div>
         </div>
       </div>
@@ -127,6 +131,19 @@ export default {
     refreshCurrenTime: function () {
       return this.$dayjs(this.currentTime).format("YYYY年MM月DD日 HH:mm:ss");
     },
+  },
+  watch: {
+    max(newValue){
+      
+      // const updateYAxis = {
+      //   type: 'value',
+      //   min: 0,
+      //   max: newVal
+      // };
+      // this.chart.setOption({
+      //   yAxis: updateYAxis
+      // })
+    }
   },
   methods: {
     initChart(id) {
@@ -221,6 +238,15 @@ export default {
             },
           },
         ],
+        dataZoom: [
+          {
+            type: 'slider',
+            xAxisIndex: 0,
+            start: 0,
+            end: 100,
+            top: '90%' // 设置滑动条的位置
+          }
+        ],
         grid: {
           left: 0,
           right: 0,
@@ -229,6 +255,7 @@ export default {
         },
       };
       firstChart.setOption(option);
+      this[id] = firstChart;
     },
     initPieChart() {
       const option = {
@@ -293,7 +320,7 @@ export default {
           },
         },
         tooltip: {
-          trigger: "axis", // 设置触发类型为坐标轴轴线触发
+          trigger: 'axis',
           formatter: tooltipFormatter,
         },
         yAxis: {
@@ -367,6 +394,15 @@ export default {
       refreshCurrentTimeTimer: null,
       type: "custom-node",
       id: null,
+      max: 30,
+      min: 0,
+      chart: null,
+      inputMap: {
+        chart1: {
+          min: 0,
+          max: 30
+        }
+      }
     };
   },
 };
@@ -383,9 +419,10 @@ $design_height: 1080;
 @function px2vh($px) {
   @return $px / ($design_height / 100) + vh;
 }
+
 .container {
   .header {
-    height: 88px;
+    height: px2vh(88);
     display: flex;
     align-items: center;
     background: rgba(29, 67, 84, 1);
@@ -436,13 +473,13 @@ $design_height: 1080;
         background-repeat: no-repeat;
         background-position: 0 0;
         background-size: 100% 100%;
-        height: 30px;
-        width: 166px;
+        height: px2vh(30);
+        width: px2vw(166);
         display: flex;
         align-items: center;
-        margin-left: 24px;
-        padding-left: 10px;
-        padding-right: 10px;
+        margin-left: px2vw(24);
+        padding-left: px2vw(10);
+        padding-right: px2vw(10);
 
         &:hover {
           cursor: pointer;
@@ -469,14 +506,14 @@ $design_height: 1080;
       .chopper-main-status {
         width: 100%;
         .title {
-          font-size: 24px;
+          font-size: 2rem;
           color: #00f2ff;
           line-height: 32px;
           font-weight: 600;
         }
         .main-status {
-          margin-top: 32px;
-          height: 107px;
+          margin-top: px2vh(32);
+          height: px2vh(107);
           display: flex;
           justify-content: flex-start;
           align-items: center;
@@ -509,7 +546,7 @@ $design_height: 1080;
               color: #f5a623;
               display: flex;
               align-items: flex-end;
-              font-size: 70px;
+              font-size: px2vw(70);
               font-weight: 700;
               line-height: 81px;
             }
@@ -518,14 +555,15 @@ $design_height: 1080;
               line-height: 22px;
               color: #00f2ff;
               font-weight: 600;
+              font-size: px2vw(30);
             }
           }
         }
       }
 
       .chopper-sub-status {
-        margin-top: 32px;
-        height: 62px;
+        margin-top: px2vh(32);
+        height: px2vh(62);
         box-sizing: border-box;
         border-top: 1px solid #45c4ff;
         border-bottom: 1px solid #45c4ff;
@@ -567,7 +605,7 @@ $design_height: 1080;
           .sub-status-num {
             line-height: 22.4px;
             font-weight: 400;
-            font-size: 16px;
+            font-size: px2vw(22);
             color: #00fefe;
           }
 
@@ -580,7 +618,7 @@ $design_height: 1080;
           .sub-status-desc {
             line-height: 16px;
             font-weight: 400;
-            font-size: 12px;
+            font-size: px2vw(16);
             color: #fff;
           }
         }
@@ -598,11 +636,13 @@ $design_height: 1080;
       .charts-wrapper {
         margin-top: 32px;
         width: 100%;
+        position: relative;
         display: flex;
         .chart-wrapper {
           flex: 1;
           height: 300px;
           margin-right: 16px;
+          width: 90%;
         }
       }
     }
@@ -656,7 +696,8 @@ $design_height: 1080;
 }
 </style>
 <style lang="scss">
-.el-input__inner {
+.custom-select {
+  .el-input__inner {
   height: 30px;
   width: 166px;
   background: transparent;
@@ -666,6 +707,8 @@ $design_height: 1080;
 .el-input__suffix {
   display: none;
 }
+}
+
 
 .filter-popper {
   border: 1px solid #00c7ff;

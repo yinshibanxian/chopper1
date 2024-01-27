@@ -234,7 +234,7 @@ export default {
             // 当前矩阵
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
-            const toMatrix = G6.Util.transform(matrix, [["r", cfg.deg]]);
+            const toMatrix = G6.Util.transform(matrix, [["r", cfg.deg + (cfg.index === 0 ? Math.PI : 0)]]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
               matrix: toMatrix,
@@ -375,13 +375,12 @@ export default {
           {
             id: currentSpect.spect_code,
             label: currentSpect.spect_name,
-            type: "last-node",
+            type: "last-node"
           },
         ];
         originalData.push(chopperArr);
       });
       return getShapedData({ originalData });
-      // console.log('res>>>', originalData, 'spect_code', chopperList);
     },
     handleNodeClick(evt) {
       const id = evt.item._cfg.id;

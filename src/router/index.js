@@ -80,12 +80,12 @@ export const constantRoutes = [
         component: () => import('@/views/InspectionRecord/index'),
         meta: { title: '巡检记录', icon: 'table' }
       },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '故障记录', icon: 'tree' }
-      },
+      // {
+      //   path: 'tree',
+      //   name: 'Tree',
+      //   component: () => import('@/views/tree/index'),
+      //   meta: { title: '故障记录', icon: 'tree' }
+      // },
       {
         path: '/maintenance',
         name: 'maintenance',

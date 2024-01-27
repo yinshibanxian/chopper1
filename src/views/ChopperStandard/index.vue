@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="header">
-      <div class="filter">
+      <!-- <div class="filter">
         <el-input
           size="small"
           class="search-input"
@@ -11,7 +11,8 @@
         <el-button size="small" type="primary" @click="searchSpect"
           >搜索</el-button
         >
-      </div>
+      </div> -->
+      <div></div>
       <div class="operate-btn">
         <el-button
           size="small"

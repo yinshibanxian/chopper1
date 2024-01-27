@@ -21,7 +21,6 @@ export function getShapedData({ originalData }) {
   // 将全部数据分成两组，左右对称排列
 const chunkedData = chunk(originalData, Math.floor(originalData.length / 2));
 
-console.log(chunkedData, 'chunkData');
 
 
 
@@ -53,6 +52,7 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             label: label,
             type: type,
             deg: Math.PI - curDeg,
+            index: outerIndex
           });
         });
       });
@@ -83,6 +83,7 @@ chunkedData.forEach((chopperArr, outerIndex) => {
             label: label,
             type: type,
             deg: Math.PI - curDeg,
+            index: outerIndex
           });
         });
       });
