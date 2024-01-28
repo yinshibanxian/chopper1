@@ -1,12 +1,26 @@
 import request from '@/utils/request';
-import axios from 'axios';
 
-const baseURL = 'http://47.115.49.59:8000/api';
 
-export function getAlgorithmList(page = 1) {
+export function getAlgorithmList({ page, size }) {
   return request({
     method: 'get',
-    url: `/algorithm/?page=1`,
-    withCredentials: true
+    url: `/algorithm/`,
+    params: {
+      page,
+      size
+    }
   })
 }
+
+
+export function createAlgorithm(data) {
+  return request({
+    method: 'post',
+    url: '/algorithm/',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+

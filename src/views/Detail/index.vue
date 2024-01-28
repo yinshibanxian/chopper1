@@ -25,7 +25,7 @@
               <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}是否启动</div>
             </div>
             <div class="main-status-item">
-              <div class="status">达标</div>
+              <div class="status">正常</div>
               <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制是否达标</div>
             </div>
             <div class="main-status-item">
@@ -37,8 +37,12 @@
               <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}振动报警</div>
             </div>
             <div class="main-status-item">
-              <div class="status">正常</div>
+              <div class="status" style="color: red">故障</div>
               <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}超差报警</div>
+            </div>
+            <div class="main-status-item">
+              <div class="status" style="color: #f5a623">异常</div>
+              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}其他报警</div>
             </div>
           </div>
         </div>
@@ -512,7 +516,7 @@ $design_height: 1080;
           font-weight: 600;
         }
         .main-status {
-          margin-top: px2vh(32);
+          margin-top: px2vh(24);
           height: px2vh(107);
           display: flex;
           justify-content: flex-start;
@@ -543,10 +547,10 @@ $design_height: 1080;
             }
 
             .status {
-              color: #f5a623;
+              color: #3dc479;
               display: flex;
               align-items: flex-end;
-              font-size: px2vw(70);
+              font-size: px2vw(60);
               font-weight: 700;
               line-height: 81px;
             }
@@ -555,14 +559,14 @@ $design_height: 1080;
               line-height: 22px;
               color: #00f2ff;
               font-weight: 600;
-              font-size: px2vw(30);
+              font-size: px2vw(25);
             }
           }
         }
       }
 
       .chopper-sub-status {
-        margin-top: px2vh(32);
+        margin-top: px2vh(24);
         height: px2vh(62);
         box-sizing: border-box;
         border-top: 1px solid #45c4ff;
@@ -626,7 +630,7 @@ $design_height: 1080;
     }
 
     .chopper-statistic {
-      margin-top: 32px;
+      margin-top: 24px;
       .title {
         font-size: 24px;
         color: #00f2ff;
@@ -634,7 +638,7 @@ $design_height: 1080;
         font-weight: 600;
       }
       .charts-wrapper {
-        margin-top: 32px;
+        margin-top: 24px;
         width: 100%;
         position: relative;
         display: flex;
@@ -648,7 +652,7 @@ $design_height: 1080;
     }
 
     .chopper-trend-wrapper {
-      margin-top: 32px;
+      margin-top: 24px;
       .title {
         font-size: 24px;
         color: #00f2ff;
@@ -720,9 +724,9 @@ $design_height: 1080;
 
 .el-select-dropdown__item.selected {
   color: #00f2ff;
-  background: rgb(2, 12, 12);
+  background: #1d4354 !important;
 }
 .el-select-dropdown {
-  background: rgb(2, 12, 12);
+  background: #1d4354 !important;
 }
 </style>

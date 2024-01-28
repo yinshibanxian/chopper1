@@ -24,7 +24,11 @@
     </div>
     <div class="table">
       <el-table :data="spectList">
-        <el-table-column prop="is_show" label="是否展示在首页"></el-table-column>
+        <el-table-column prop="is_show" label="是否展示在首页">
+          <template slot-scope="scope">
+            {{ scope.row.is_show ? "是" : "否" }}
+          </template>
+        </el-table-column>
         <el-table-column prop="show_type" label="展示形式"></el-table-column>
         <el-table-column prop="standard" label="标准参考值"></el-table-column>
         <el-table-column prop="chopper_code" label="关联斩波器"></el-table-column>

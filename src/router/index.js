@@ -68,6 +68,27 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/algorithm',
+    component: Layout,
+    redirect: '/algorithm/management',
+    name: 'Algorithm',
+    meta: { title: '算法管理', icon: 'el-icon-s-claim' },
+    children: [
+      {
+        path: '/algorithm/management',
+        name: 'algorithmManagement',
+        component: () => import('@/views/Algorithm/index'),
+        meta: { title: '算法管理', icon: 'el-icon-folder-checked' }
+      },
+      {
+        path: '/algorithm-log/management',
+        name: 'algorithmManagement',
+        component: () => import('@/views/AlgorithmLog/index'),
+        meta: { title: '算法日志', icon: 'el-icon-odometer' }
+      }
+    ]
+  },
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',

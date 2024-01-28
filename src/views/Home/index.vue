@@ -150,7 +150,7 @@ export default {
             const matrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
             // 目标矩阵
             const toMatrix = G6.Util.transform(matrix, [
-              ["r", cfg.deg || Math.PI / 2],
+              ["r", cfg.deg + Math.PI / 2],
             ]);
             // 返回这一帧需要的参数集，本例中只有目标矩阵
             return {
