@@ -5,8 +5,7 @@
     <div class="table">
       <el-table :data="algorithmList">
         <el-table-column prop="algorithm_name" label="算法名称"></el-table-column>
-        <el-table-column prop="start_time" label="开始时间"></el-table-column>
-        <el-table-column prop="end_time" label="结束时间"></el-table-column>
+        <el-table-column prop="end_time" label="训练结果"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <el-button

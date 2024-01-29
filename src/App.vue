@@ -11,26 +11,44 @@ export default {
 </script>
 <style lang="scss">
 .el-table {
-  tr {
-    background: rgba(29, 67, 84, 1) !important;
+  .el-table__body {
+    tr {
+      background: rgba(29, 67, 84, 0.8) !important;
+    }
+    td {
+      background: rgba(29, 67, 84, 0.8);
+      border-bottom: none;
+      color: #fff;
+    }
+    th {
+      background: rgba(29, 67, 84, 0.8);
+      border-bottom: none;
+      color: #fff;
+    }
+    border: none;
   }
-  td {
-    background: rgba(29, 67, 84, 1);
-    border-bottom: none;
-    color: #fff;
+
+  .el-table__header {
+    tr {
+      background: rgba(29, 67, 84, 1) !important;
+    }
+    td {
+      background: rgba(29, 67, 84, 1) !important;
+      // border-bottom: none;
+      color: #fff;
+    }
+    th {
+      background: rgba(29, 67, 84, 1) !important;
+      // border-bottom: none;
+      color: #fff;
+    }
   }
-  th {
-    background: rgba(29, 67, 84, 1);
-    border-bottom: none;
-    color: #fff;
-  }
-  border: none;
 }
-.el-table__body tr.hover-row>td {
-  background: none !important;
+.el-table__body tr.hover-row > td {
+  background: rgba(29, 67, 84, 0.9) !important;
 }
 .el-table__empty-block {
-  background: rgba(29, 67, 84, 1);
+  background: rgba(29, 67, 84, 0.9);
 }
 .el-pagination {
   .btn-prev {
@@ -48,8 +66,8 @@ export default {
 }
 
 .el-pagination .btn-next {
-    background: transparent;
-  }
+  background: transparent;
+}
 .el-dialog {
   background: rgba(29, 67, 84, 1);
 }
@@ -59,7 +77,6 @@ export default {
     color: #fff !important;
     font-weight: 600;
   }
-
 }
 .el-pagination button:disabled {
   color: #c0c4cc;

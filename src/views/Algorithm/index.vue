@@ -202,7 +202,7 @@ export default {
   methods: {
     handleRun() {
       console.log(this, "this", this.$info);
-      this.$info("算法文件开始运行，运行结束会进行通知，或者在算法日志查看");
+      this.$message("算法文件开始运行，运行结束会进行通知，或者在算法日志查看");
     },
     async fetchChopperStandardList() {
       const res = await getChopperStandardList({ page: 1, size: 1000 });
