@@ -81,7 +81,13 @@
       :title="`${editingMaintenance ? '编辑' : '新建'}检修维护记录`"
       :visible.sync="modalVisible"
     >
-      <el-form :model="form" ref="form" :rules="rules">
+      <el-form
+        :model="form"
+        ref="form"
+        :rules="rules"
+        label-position="right"
+        label-width="120px"
+      >
         <el-form-item label="关联斩波器" prop="chopper_code">
           <el-select
             size="small"
@@ -130,8 +136,8 @@
     </el-dialog>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import {
   createSpect,
   getSpectList,
@@ -144,7 +150,7 @@ import {
   createOperationAndMaintenance,
   getOperationAndMaintenanceList,
   updateOperationAndMainTenance,
-  deleteOperationAndMaintenance
+  deleteOperationAndMaintenance,
 } from "@/api/operationAndMaintenance";
 export default {
   data() {
@@ -323,8 +329,8 @@ export default {
   },
 };
 </script>
-  
-  <style lang="scss" scoped>
+
+<style lang="scss" scoped>
 .app-container {
   .header {
     display: flex;
@@ -351,7 +357,7 @@ export default {
   }
 }
 </style>
-  <style lang="scss">
+<style lang="scss">
 .el-input {
   width: 200px;
 }
@@ -359,4 +365,3 @@ export default {
   width: 200px;
 }
 </style>
-  

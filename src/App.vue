@@ -75,6 +75,16 @@ export default {
   background: #1d4354 !important;
 }
 
+.el-message-box {
+  background: rgba(29, 67, 84, 1);
+  .el-message-box__title {
+    color: #fff;
+  }
+  .el-message-box__content {
+    color: #fff;
+  }
+}
+
 .el-form-item__label {
   color: #fff;
 }

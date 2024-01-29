@@ -26,32 +26,65 @@
         <el-table-column
           prop="chopper_code"
           label="斩波器代号"
+          width="120px"
         ></el-table-column>
         <el-table-column
           prop="running_speed"
           label="运行转速"
         ></el-table-column>
-        <el-table-column prop="running_temp" label="温度">
-        </el-table-column>
-        <el-table-column prop="running_vibration" label="振动"></el-table-column>
+        <el-table-column prop="running_temp" label="温度"> </el-table-column>
+        <el-table-column
+          prop="running_vibration"
+          label="振动"
+        ></el-table-column>
         <el-table-column prop="running_veto_rate" label="Veto率">
         </el-table-column>
-        <el-table-column prop="running_time_week" label="周运行时长">
+        <el-table-column prop="running_time_week" label="周运行时长" width="100px">
         </el-table-column>
-        <el-table-column prop="running_other" label="其他">
-        </el-table-column>
-        <el-table-column prop="working_condition" label="工作氛围条件"></el-table-column>
-        <el-table-column prop="working_status" label="工作氛围状态"></el-table-column>
-        <el-table-column prop="working_other" label="工作氛围其他"></el-table-column>
+        <el-table-column prop="running_other" label="其他"> </el-table-column>
+        <el-table-column
+          prop="working_condition"
+          label="工作氛围条件"
+          width="120px"
+        ></el-table-column>
+        <el-table-column
+          prop="working_status"
+          label="工作氛围状态"
+          width="120px"
+        ></el-table-column>
+        <el-table-column
+          prop="working_other"
+          label="工作氛围其他"
+          width="120px"
+        ></el-table-column>
         <el-table-column prop="cool_temp" label="冷却温度"></el-table-column>
         <el-table-column prop="cool_heat" label="冷却压力"></el-table-column>
         <el-table-column prop="cool_flux" label="冷却流量"></el-table-column>
         <el-table-column prop="cool_temp" label="冷却温度"></el-table-column>
-        <el-table-column prop="cool_water_level " label="冷却水位"></el-table-column>
-        <el-table-column prop="cool_other" label="冷却其他参数"></el-table-column>
-        <el-table-column prop="electrical_control_cabinet" label="控制柜电气状态"></el-table-column>
-        <el-table-column prop="electrical_vacuum_pump" label="控制柜电气状态"></el-table-column>
-        <el-table-column prop="electrical_chiller " label="冷水机电气状态"></el-table-column>
+        <el-table-column
+          prop="cool_water_level "
+          label="冷却水位"
+        ></el-table-column>
+        <el-table-column
+          prop="cool_other"
+          label="冷却其他参数"
+          width="120px"
+        ></el-table-column>
+        <el-table-column
+          prop="electrical_control_cabinet"
+          label="控制柜电气状态"
+          width="120px"
+        ></el-table-column>
+        <el-table-column
+          prop="electrical_vacuum_pump"
+          label="控制柜电气状态"
+          width="120px"
+        ></el-table-column>
+        <el-table-column
+          prop="electrical_chiller "
+          label="冷水机电气状态"
+          width="120px"
+        ></el-table-column>
         <el-table-column prop="error_record" label="故障记录"></el-table-column>
         <el-table-column prop="other" label="其他"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
@@ -87,8 +120,18 @@
     <el-dialog
       :title="`${editingInspectRecord ? '编辑' : '新建'}巡检记录`"
       :visible.sync="modalVisible"
+      class="custom-dialog"
+      width="800px"
+      height="800px"
     >
-      <el-form :model="form" ref="form" :rules="rules">
+      <el-form
+        :model="form"
+        ref="form"
+        :rules="rules"
+        class="custom-form"
+        label-position="right"
+        label-width="120px"
+      >
         <el-form-item label="关联斩波器" prop="chopper_code">
           <el-select size="small" v-model="form.chopper_code">
             <el-option
@@ -165,7 +208,9 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="modalVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmCreateInspectRecord">确定</el-button>
+        <el-button type="primary" @click="confirmCreateInspectRecord"
+          >确定</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -174,7 +219,12 @@
 <script>
 import { getSpectList, searchSpectById } from "@/api/spect";
 import { getChopperList } from "@/api/chopper";
-import { createInspectRecord, deleteInspectRecord, getInspectRecordList, updateInspectRecord } from "@/api/inspectRecord";
+import {
+  createInspectRecord,
+  deleteInspectRecord,
+  getInspectRecordList,
+  updateInspectRecord,
+} from "@/api/inspectRecord";
 export default {
   data() {
     return {
@@ -222,7 +272,7 @@ export default {
       pageSize: 15,
       totalCount: 0,
       chopperList: [],
-      inspectRecordList: []
+      inspectRecordList: [],
     };
   },
   mounted() {
@@ -292,7 +342,8 @@ export default {
       this.form.cool_flux = inspectRecord.cool_flux;
       this.form.cool_water_level = inspectRecord.cool_water_level;
       this.form.cool_other = inspectRecord.cool_other;
-      this.form.electrical_control_cabinet = inspectRecord.electrical_control_cabinet;
+      this.form.electrical_control_cabinet =
+        inspectRecord.electrical_control_cabinet;
       this.form.electrical_vacuum_pump = inspectRecord.electrical_vacuum_pump;
       this.form.electrical_chiller = inspectRecord.electrical_chiller;
       this.form.error_record = inspectRecord.error_record;
@@ -409,6 +460,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.custom-form {
+  .el-form-item {
+  width: 50%;
+  display: inline-block;
+  .el-form-item__label {
+    display: inline-block !important;
+    width: 1000px !important;
+    background: red !important;
+  }
+  .el-form-item__content {
+    display: inline-block !important;
+
+  }
+}
+}
+
+
+
 .app-container {
   .header {
     display: flex;
@@ -436,23 +505,11 @@ export default {
 }
 </style>
 <style lang="scss">
+
 .el-input {
   width: 200px;
 }
 .el-input__inner {
   width: 200px;
-}
-// .el-form {
-//   display: f;
-// }
-.el-form-item {
-  // display: flex;
-  
-  .el-form-item__label {
-    width: 120px;
-  }  
-  .el-form-item__content {
-    width: 50%;
-  }
 }
 </style>

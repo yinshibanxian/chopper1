@@ -93,7 +93,13 @@
       :title="`${editingChopper ? '编辑' : '新建'}斩波器`"
       :visible.sync="modalVisible"
     >
-      <el-form :model="form" ref="form" :rules="rules">
+      <el-form
+        :model="form"
+        ref="form"
+        :rules="rules"
+        label-position="right"
+        label-width="120px"
+      >
         <el-form-item label="斩波器代号" prop="chopper_code">
           <el-input size="small" v-model="form.chopper_code"></el-input>
         </el-form-item>
@@ -148,11 +154,13 @@
 </template>
 
 <script>
+import { getSpectList, searchSpectById } from "@/api/spect";
 import {
-  getSpectList,
-  searchSpectById,
-} from "@/api/spect";
-import { getChopperList, createChopper, deleteChopper, updateChopper } from "@/api/chopper";
+  getChopperList,
+  createChopper,
+  deleteChopper,
+  updateChopper,
+} from "@/api/chopper";
 export default {
   data() {
     return {

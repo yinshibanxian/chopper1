@@ -25,11 +25,14 @@
       <el-table :data="algorithmList">
         <el-table-column
           prop="algorithm_name"
-          label="故障算法名称"
+          label="算法名称"
         ></el-table-column>
         <el-table-column prop="start_time" label="开始时间"></el-table-column>
         <el-table-column prop="end_time" label="结束时间"></el-table-column>
-        <el-table-column prop="chopper_standard" label="斩波器参数"></el-table-column>
+        <el-table-column
+          prop="chopper_standard"
+          label="斩波器参数"
+        ></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template slot-scope="scope">
             <!-- <el-button
@@ -40,8 +43,12 @@
             >
               编辑
             </el-button> -->
-            <el-button type="text" size="small" @click="handleRun(scope.row)"> 运行 </el-button>
-            <el-button type="text" size="small" @click="handleRun(scope.row)"> 编辑 </el-button>
+            <el-button type="text" size="small" @click="handleRun(scope.row)">
+              运行
+            </el-button>
+            <el-button type="text" size="small" @click="handleRun(scope.row)">
+              编辑
+            </el-button>
             <el-button
               type="text"
               size="small"
@@ -66,8 +73,14 @@
       :title="`${editingSpect ? '编辑' : '新建'}算法`"
       :visible.sync="modalVisible"
     >
-      <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="故障算法名称" prop="algorithm_name ">
+      <el-form
+        :model="form"
+        ref="form"
+        :rules="rules"
+        label-position="right"
+        label-width="120px"
+      >
+        <el-form-item label="算法名称" prop="algorithm_name ">
           <el-input
             size="small"
             v-model="form.algorithm_name"
@@ -112,7 +125,12 @@
 
         <el-form-item label="斩波器参数" prop="chopper_standard">
           <el-select v-model="form.chopper_standard" placeholder="斩波器参数">
-            <el-option v-for="item in chopperStandardList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option
+              v-for="item in chopperStandardList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -125,15 +143,10 @@
 </template>
 
 <script>
-import {
-  deleteSpect,
-  updateSpect,
-  searchSpectById,
-} from "@/api/spect";
+import { deleteSpect, updateSpect, searchSpectById } from "@/api/spect";
 import { createAlgorithm, getAlgorithmList } from "@/api/algorithm";
 import { getChopperStandardList } from "@/api/chopperStandard";
-import dayjs from 'dayjs';
-
+import dayjs from "dayjs";
 
 export default {
   data() {
@@ -188,14 +201,14 @@ export default {
   },
   methods: {
     handleRun() {
-        console.log(this, 'this', this.$info)
-        this.$info('算法文件开始运行，运行结束会进行通知，或者在算法日志查看');
+      console.log(this, "this", this.$info);
+      this.$info("算法文件开始运行，运行结束会进行通知，或者在算法日志查看");
     },
     async fetchChopperStandardList() {
       const res = await getChopperStandardList({ page: 1, size: 1000 });
       const list = res.data.list || [];
       this.chopperStandardList = list.map((item) => ({
-        label: item.parameter_code ,
+        label: item.parameter_code,
         value: item.id,
       }));
     },
@@ -255,17 +268,23 @@ export default {
         page: this.currentPage,
         size: this.pageSize,
       });
-      console.log(res, 'res>>>');
+      console.log(res, "res>>>");
       this.algorithmList = res.data.list;
       this.totalCount = res.data.count;
     },
     async handleCreateSpect() {
       const formData = new FormData();
-      console.log('file>>>', this.form.file);
+      console.log("file>>>", this.form.file);
       formData.append("algorithm_name", this.form.algorithm_name);
       formData.append("file", this.form.file);
-      formData.append("start_time", dayjs(this.form.start_time).format('YYYY-MM-DD hh:mm'));
-      formData.append("end_time", dayjs(this.form.start_time).format('YYYY-MM-DD hh:mm'));
+      formData.append(
+        "start_time",
+        dayjs(this.form.start_time).format("YYYY-MM-DD hh:mm")
+      );
+      formData.append(
+        "end_time",
+        dayjs(this.form.start_time).format("YYYY-MM-DD hh:mm")
+      );
       formData.append("chopper_standard", this.form.chopper_standard);
 
       await createAlgorithm(formData);

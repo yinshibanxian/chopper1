@@ -4,7 +4,7 @@
     </div>
     <div class="table">
       <el-table :data="algorithmList">
-        <el-table-column prop="algorithm_name" label="故障算法名称"></el-table-column>
+        <el-table-column prop="algorithm_name" label="算法名称"></el-table-column>
         <el-table-column prop="start_time" label="开始时间"></el-table-column>
         <el-table-column prop="end_time" label="结束时间"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
@@ -42,7 +42,7 @@
       :visible.sync="modalVisible"
     >
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="故障算法名称" prop="algorithm_name ">
+        <el-form-item label="算法名称" prop="algorithm_name ">
           <el-input
             size="small"
             v-model="form.algorithm_name"
