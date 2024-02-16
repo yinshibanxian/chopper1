@@ -17,7 +17,7 @@
           size="small"
           type="primary"
           @click="handleCreateSpectBtnClick"
-          >新建算法</el-button
+          >上传算法</el-button
         >
       </div>
     </div>
@@ -27,6 +27,7 @@
           prop="algorithm_name"
           label="算法名称"
         ></el-table-column>
+         <el-table-column prop="method_name" label="执行函数名称"></el-table-column>
         <el-table-column prop="start_time" label="开始时间"></el-table-column>
         <el-table-column prop="end_time" label="结束时间"></el-table-column>
         <el-table-column
@@ -80,10 +81,17 @@
         label-position="right"
         label-width="120px"
       >
-        <el-form-item label="算法名称" prop="algorithm_name ">
+        <el-form-item label="算法名称" prop="algorithm_name">
           <el-input
             size="small"
             v-model="form.algorithm_name"
+            class="custom-input"
+          ></el-input>
+        </el-form-item>
+         <el-form-item label="执行函数名称" prop="method_name">
+          <el-input
+            size="small"
+            v-model="form.method_name"
             class="custom-input"
           ></el-input>
         </el-form-item>
@@ -162,7 +170,8 @@ export default {
         file: null,
         start_time: "",
         end_time: "",
-        chopper_standard: "",
+        chopper_standard: "", 
+        method_name: ""
       },
       rules: {
         spect_code: [
@@ -286,6 +295,7 @@ export default {
         dayjs(this.form.start_time).format("YYYY-MM-DD hh:mm")
       );
       formData.append("chopper_standard", this.form.chopper_standard);
+      formData.append("method_name", this.form.method_name);
 
       await createAlgorithm(formData);
       this.currentPage = 1;

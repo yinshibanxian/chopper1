@@ -26,13 +26,14 @@ export function createChopper({
   });
 }
 
-export function getChopperList({ page, size }) {
+export function getChopperList({ page, size, spect_code }) {
   return request({
     url: "/chopper/",
     method: "get",
     params: {
       page,
       size,
+      spect_code
     },
   });
 }

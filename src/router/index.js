@@ -85,7 +85,13 @@ export const constantRoutes = [
         name: 'algorithmManagement',
         component: () => import('@/views/AlgorithmLog/index'),
         meta: { title: '算法日志', icon: 'el-icon-odometer' }
-      }
+      },
+      {
+        path: '/h5/management',
+        name: 'H5Management',
+        component: () => import('@/views/H5Management/index'),
+        meta: { title: 'H5文件解析', icon: 'el-icon-odometer' }
+      },
     ]
   },
   {

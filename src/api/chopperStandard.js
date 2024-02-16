@@ -1,12 +1,13 @@
 import request from "@/utils/request";
 
-export function getChopperStandardList({ page, size }) {
+export function getChopperStandardList({ page, size, chopper_code }) {
   return request({
     url: "/chopperStandard/",
     method: "get",
     params: {
       page,
       size,
+      chopper_code
     },
   });
 }

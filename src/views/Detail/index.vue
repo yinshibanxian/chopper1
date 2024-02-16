@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <div class="header">
-      <div class="header-left"></div>
+      <div class="header-left">
+        <div style="font-weight: 600;cursor:pointer;" @click="handleNavigateToHome">回到首页</div>
+      </div>
       <div class="header-center"></div>
       <div class="header-right">
         <div class="date">
@@ -150,6 +152,11 @@ export default {
     }
   },
   methods: {
+    handleNavigateToHome() {
+      this.$router.push({
+        path: '/dashboard'
+      })
+    },
     initChart(id) {
       const firstChart = echarts.init(document.getElementById(id));
       // 自定义 tooltip 样式
