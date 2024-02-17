@@ -50,13 +50,16 @@ export function createInspectRecord({
   });
 }
 
-export function getInspectRecordList({ page, size }) {
+export function getInspectRecordList({ page, size, chopper_code, start_time, end_time }) {
   return request({
     url: "/inspectRecord/",
     method: "get",
     params: {
       page,
       size,
+      chopper_code,
+      start_time,
+      end_time
     },
   });
 }
@@ -117,4 +120,23 @@ export function updateInspectRecord({
       other,
     },
   });
+}
+
+export function exportInspectRecord() {
+  return request({
+    url: '/inspectRecord/export/',
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+export function importFileUpload(data) {
+  return request({
+    url: '/inspectRecord/import/',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }

@@ -2,17 +2,37 @@
   <div class="app-container">
     <div class="header">
       <div class="filter">
-        <!-- <el-input
-          size="small"
-          class="search-input"
-          placeholder="请输入谱仪ID"
-          v-model="searchText"
-        />
-        <el-button size="small" type="primary" @click="searchSpect"
-          >搜索</el-button
-        > -->
+        <div>
+          <el-select
+            placeholder="请选择斩波器"
+            v-model="searchCondition.chopper_code"
+            clearable
+          >
+            <el-option
+              v-for="item in chopperList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+        <div style="margin-left: 12px">
+          <el-date-picker
+            v-model="searchCondition.time"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            clearable
+          >
+          </el-date-picker>
+        </div>
       </div>
       <div class="operate-btn">
+        <el-button size="small" type="primary" @click="handleImport"
+          >导入</el-button
+        >
         <el-button
           size="small"
           type="primary"
@@ -23,6 +43,12 @@
     </div>
     <div class="table">
       <el-table :data="inspectRecordList">
+        <el-table-column type="index" label="序号" width="80"></el-table-column>
+        <el-table-column
+          prop="created_time"
+          label="巡检时间"
+          width="210px"
+        ></el-table-column>
         <el-table-column
           prop="chopper_code"
           label="斩波器代号"
@@ -39,7 +65,11 @@
         ></el-table-column>
         <el-table-column prop="running_veto_rate" label="Veto率">
         </el-table-column>
-        <el-table-column prop="running_time_week" label="周运行时长" width="100px">
+        <el-table-column
+          prop="running_time_week"
+          label="周运行时长"
+          width="100px"
+        >
         </el-table-column>
         <el-table-column prop="running_other" label="其他"> </el-table-column>
         <el-table-column
@@ -213,6 +243,52 @@
         >
       </span>
     </el-dialog>
+    <el-dialog
+      title="导入巡检记录"
+      :visible.sync="importModalVisible"
+      class="custom-dialog"
+      width="800px"
+      height="800px"
+    >
+      <el-form
+        :model="form"
+        ref="form"
+        :rules="rules"
+        class="custom-form"
+        label-position="right"
+        label-width="120px"
+      >
+        <el-form-item label="导入文件" prop="file">
+          <el-upload
+            class="upload-demo"
+            drag
+            action="/api/algorithm/"
+            v-model="form.file"
+            :headers="{ authorization: `Bearer ${access}` }"
+            :auto-upload="false"
+            :on-change="onFileChange"
+            :limit="1"
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或<em>点击上传</em>
+            </div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div
+        style="margin-left: 60px; cursor: pointer; color: #409eff"
+        @click="downloadFile"
+      >
+        点击下载示例文件
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importModalVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmUploadFile"
+          >确定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -224,14 +300,54 @@ import {
   deleteInspectRecord,
   getInspectRecordList,
   updateInspectRecord,
+  exportInspectRecord,
+  importFileUpload
 } from "@/api/inspectRecord";
+import dayjs from "dayjs";
 export default {
   data() {
     return {
       searchText: "",
       modalVisible: false,
+      importModalVisible: false,
       popoverVisible: false,
       editingInspectRecord: null,
+      importFile: '',
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+        ],
+      },
+      searchCondition: {
+        time: "",
+        chopper_code: "",
+      },
       form: {
         // 斩波器代号
         chopper_code: "",
@@ -277,18 +393,71 @@ export default {
   },
   mounted() {
     this.getInspectRecordList();
+    this.fetchChopperList();
   },
   watch: {
     currentPage(newVal, oldVal) {
       this.getInspectRecordList();
     },
-    modalVisible(newVal, oldVal) {
-      if (newVal) {
-        this.fetchChopperList();
-      }
+    "searchCondition.time": {
+      handler: function (newVal) {
+        console.log(newVal, "newVal");
+        const start_time = newVal
+          ? dayjs(this.searchCondition.time[0]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const end_time = newVal
+          ? dayjs(this.searchCondition.time[1]).format("YYYY-MM-DD hh:mm")
+          : null;
+        this.getInspectRecordList({
+          start_time,
+          end_time,
+          chopper_code: this.searchCondition.chopper_code,
+        });
+      },
+    },
+    "searchCondition.chopper_code": {
+      handler: function (newVal) {
+        const start_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[0]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const end_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[1]).format("YYYY-MM-DD hh:mm")
+          : null;
+        this.getInspectRecordList({
+          chopper_code: newVal,
+          start_time,
+          end_time,
+        });
+      },
     },
   },
   methods: {
+    async confirmUploadFile() {
+      const formData = new FormData();
+      formData.append('file', this.importFile);
+      await importFileUpload(formData);
+      this.currentPage = 1;
+      this.getInspectRecordList();
+
+    },
+    async onFileChange(file, fileList) {
+      this.importFile = file.raw;
+    },
+    downloadFile() {
+      exportInspectRecord().then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        link.setAttribute("download", '示例文件.xlsx');
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理创建的 URL 对象
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      });
+    },
     async searchSpect() {
       if (this.searchText === "") {
         this.currentPage = 1;
@@ -325,6 +494,9 @@ export default {
     handleCreateChopperBtnClick() {
       this.modalVisible = true;
     },
+    handleImport() {
+      this.importModalVisible = true;
+    },
     handleEditInspectRecordBtnClick(inspectRecord) {
       this.editingInspectRecord = inspectRecord;
       this.form.chopper_code = inspectRecord.chopper_code;
@@ -359,10 +531,14 @@ export default {
         this._deleteInspectRecord(inspectRecord.id);
       });
     },
-    async getInspectRecordList() {
+    async getInspectRecordList(params) {
+      const { chopper_code, start_time, end_time, page } = params || {};
       const res = await getInspectRecordList({
-        page: this.currentPage,
+        page: page || this.currentPage,
         size: this.pageSize,
+        chopper_code,
+        start_time,
+        end_time,
       });
       this.inspectRecordList = res.data.list;
       this.totalCount = res.data.count;
@@ -462,21 +638,18 @@ export default {
 <style lang="scss" scoped>
 .custom-form {
   .el-form-item {
-  width: 50%;
-  display: inline-block;
-  .el-form-item__label {
-    display: inline-block !important;
-    width: 1000px !important;
-    background: red !important;
-  }
-  .el-form-item__content {
-    display: inline-block !important;
-
+    width: 50%;
+    display: inline-block;
+    .el-form-item__label {
+      display: inline-block !important;
+      width: 1000px !important;
+      background: red !important;
+    }
+    .el-form-item__content {
+      display: inline-block !important;
+    }
   }
 }
-}
-
-
 
 .app-container {
   .header {
@@ -505,7 +678,6 @@ export default {
 }
 </style>
 <style lang="scss">
-
 .el-input {
   width: 200px;
 }

@@ -2,15 +2,32 @@
   <div class="app-container">
     <div class="header">
       <div class="filter">
-        <!-- <el-input
-          size="small"
-          class="search-input"
-          placeholder="请输入谱仪ID"
-          v-model="searchText"
-        />
-        <el-button size="small" type="primary" @click="searchSpect"
-          >搜索</el-button
-        > -->
+        <div>
+          <el-select
+            placeholder="请选择斩波器"
+            v-model="searchCondition.chopper_code"
+            clearable
+          >
+            <el-option
+              v-for="item in chopperList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+        <div style="margin-left: 12px">
+          <el-date-picker
+            v-model="searchCondition.time"
+            type="datetimerange"
+            :picker-options="pickerOptions"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            clearable
+          >
+          </el-date-picker>
+        </div>
       </div>
       <div class="operate-btn">
         <el-button
@@ -23,6 +40,7 @@
     </div>
     <div class="table">
       <el-table :data="maintenanceList">
+        <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column
           prop="chopper_code"
           label="关联斩波器"
@@ -152,6 +170,7 @@ import {
   updateOperationAndMainTenance,
   deleteOperationAndMaintenance,
 } from "@/api/operationAndMaintenance";
+import dayjs from "dayjs";
 export default {
   data() {
     return {
@@ -159,6 +178,11 @@ export default {
       modalVisible: false,
       popoverVisible: false,
       editingMaintenance: null,
+      chopperList: [],
+      searchCondition: {
+        time: "",
+        chopper_code: "",
+      },
       form: {
         chopper_code: "",
         event_name: "",
@@ -184,6 +208,37 @@ export default {
           },
         ],
       },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+        ],
+      },
       currentPage: 1,
       pageSize: 15,
       maintenanceList: [],
@@ -193,6 +248,7 @@ export default {
   },
   mounted() {
     this.getMaintenanceList();
+    this.fetchChopperList();
   },
   watch: {
     currentPage(newVal, oldVal) {
@@ -203,8 +259,50 @@ export default {
         this.fetchChopperList();
       }
     },
+    "searchCondition.time": {
+      handler: function (newVal) {
+        console.log(newVal, "newVal");
+        const start_time = newVal
+          ? dayjs(this.searchCondition.time[0]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const end_time = newVal
+          ? dayjs(this.searchCondition.time[1]).format("YYYY-MM-DD hh:mm")
+          : null;
+        this.getMaintenanceList({
+          start_time,
+          end_time,
+          chopper_code: this.searchCondition.chopper_code,
+        });
+      },
+    },
+    "searchCondition.chopper_code": {
+      handler: function (newVal) {
+        const start_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[0]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const end_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[1]).format("YYYY-MM-DD hh:mm")
+          : null;
+        this.getMaintenanceList({
+          chopper_code: newVal,
+          start_time,
+          end_time,
+        });
+      },
+    },
   },
   methods: {
+    async fetchChopperList() {
+      const res = await getChopperList({
+        page: 1,
+        size: 1000,
+      });
+      const list = res.data.list || [];
+      this.chopperList = list.map((item) => ({
+        label: item.chopper_name,
+        value: item.chopper_code,
+      }));
+    },
     async searchSpect() {
       if (this.searchText === "") {
         this.currentPage = 1;
@@ -263,10 +361,14 @@ export default {
         this._deleteMaintenance(spect.id);
       });
     },
-    async getMaintenanceList() {
+    async getMaintenanceList(params) {
+      const { chopper_code, start_time, end_time, page } = params || {};
       const res = await getOperationAndMaintenanceList({
-        page: this.currentPage,
+        page: page || this.currentPage,
         size: this.pageSize,
+        chopper_code,
+        start_time,
+        end_time,
       });
       this.maintenanceList = res.data.list;
       this.totalCount = res.data.count;
@@ -363,5 +465,8 @@ export default {
 }
 .el-input__inner {
   width: 200px;
+}
+.el-date-range-picker.has-sidebar {
+  width: 1000px;
 }
 </style>

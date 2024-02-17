@@ -3,6 +3,8 @@ export function getOperationAndMaintenanceList({
   page,
   size,
   chopper_code,
+  start_time,
+  end_time,
   sort,
 }) {
   return request({
@@ -13,6 +15,8 @@ export function getOperationAndMaintenanceList({
       size,
       chopper_code,
       sort,
+      start_time,
+      end_time
     },
   });
 }

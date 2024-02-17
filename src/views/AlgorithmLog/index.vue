@@ -4,6 +4,7 @@
     </div>
     <div class="table">
       <el-table :data="algorithmList">
+        <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column prop="algorithm_name" label="算法名称"></el-table-column>
         <el-table-column prop="end_time" label="训练结果"></el-table-column>
         <el-table-column prop="start_time" label="开始时间"></el-table-column>
