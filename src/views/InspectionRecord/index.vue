@@ -30,6 +30,16 @@
         </div>
       </div>
       <div class="operate-btn">
+        <el-popover
+          placement="top-start"
+          width="200"
+          trigger="hover"
+          content="选中对应的斩波器或起止时间进行导出"
+          style="margin-right: 12px;"
+        >
+          <el-button :disabled="!(searchCondition.time || searchCondition.chopper_code)" slot="reference" size="small" type="primary" @click="exportRecords">导出</el-button
+          >
+        </el-popover>
         <el-button size="small" type="primary" @click="handleImport"
           >导入</el-button
         >
@@ -251,9 +261,8 @@
       height="800px"
     >
       <el-form
-        :model="form"
+        :model="importForm"
         ref="form"
-        :rules="rules"
         class="custom-form"
         label-position="right"
         label-width="120px"
@@ -263,7 +272,7 @@
             class="upload-demo"
             drag
             action="/api/algorithm/"
-            v-model="form.file"
+            v-model="importForm.file"
             :headers="{ authorization: `Bearer ${access}` }"
             :auto-upload="false"
             :on-change="onFileChange"
@@ -301,7 +310,8 @@ import {
   getInspectRecordList,
   updateInspectRecord,
   exportInspectRecord,
-  importFileUpload
+  importFileUpload,
+  exportInspectRecordWithCondition
 } from "@/api/inspectRecord";
 import dayjs from "dayjs";
 export default {
@@ -347,6 +357,9 @@ export default {
       searchCondition: {
         time: "",
         chopper_code: "",
+      },
+      importForm: {
+        file: ''
       },
       form: {
         // 斩波器代号
@@ -432,10 +445,37 @@ export default {
     },
   },
   methods: {
+    exportRecords() {
+      const start_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[0]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const end_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[1]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const chopper_code = this.searchCondition.chopper_code;
+      exportInspectRecordWithCondition({
+        start_time,
+        end_time,
+        chopper_code
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        link.setAttribute("download", "导出文件.xlsx");
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理创建的 URL 对象
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      })
+    },
     async confirmUploadFile() {
       const formData = new FormData();
       formData.append('file', this.importFile);
       await importFileUpload(formData);
+      this.importModalVisible = false;
       this.currentPage = 1;
       this.getInspectRecordList();
 

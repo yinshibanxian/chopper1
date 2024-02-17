@@ -140,3 +140,20 @@ export function importFileUpload(data) {
     }
   })
 }
+
+export function exportInspectRecordWithCondition({
+  start_time,
+  end_time,
+  chopper_code,
+}) {
+  return request({
+    url: "/inspectRecord/export/",
+    method: "get",
+    params: {
+      start_time,
+      end_time,
+      chopper_code,
+    },
+    responseType: "blob",
+  });
+}

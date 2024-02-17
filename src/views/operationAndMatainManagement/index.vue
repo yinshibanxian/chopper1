@@ -30,6 +30,19 @@
         </div>
       </div>
       <div class="operate-btn">
+        <el-popover
+          placement="top-start"
+          width="200"
+          trigger="hover"
+          content="选中对应的斩波器或起止时间进行导出"
+          style="margin-right: 12px;"
+        >
+          <el-button :disabled="!(searchCondition.time || searchCondition.chopper_code)" slot="reference" size="small" type="primary" @click="exportRecords">导出</el-button
+          >
+        </el-popover>
+        <el-button size="small" type="primary" @click="handleImport"
+          >导入</el-button
+        >
         <el-button
           size="small"
           type="primary"
@@ -152,6 +165,49 @@
         >
       </span>
     </el-dialog>
+    <el-dialog
+      title="导入检修维护记录"
+      :visible.sync="importModalVisible"
+      class="custom-dialog"
+      width="800px"
+      height="800px"
+    >
+      <el-form
+        :model="importForm"
+        ref="form"
+        class="custom-form"
+        label-position="right"
+        label-width="120px"
+      >
+        <el-form-item label="导入文件" prop="file">
+          <el-upload
+            class="upload-demo"
+            drag
+            action="/api/algorithm/"
+            v-model="importForm.file"
+            :headers="{ authorization: `Bearer ${access}` }"
+            :auto-upload="false"
+            :on-change="onFileChange"
+            :limit="1"
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或<em>点击上传</em>
+            </div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <div
+        style="margin-left: 60px; cursor: pointer; color: #409eff"
+        @click="downloadFile"
+      >
+        点击下载示例文件
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importModalVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmUploadFile">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -169,6 +225,9 @@ import {
   getOperationAndMaintenanceList,
   updateOperationAndMainTenance,
   deleteOperationAndMaintenance,
+  downloadExampleFile,
+  importFileUpload,
+  exportMaintenanceWithCondition
 } from "@/api/operationAndMaintenance";
 import dayjs from "dayjs";
 export default {
@@ -182,6 +241,9 @@ export default {
       searchCondition: {
         time: "",
         chopper_code: "",
+      },
+      importForm: {
+        file: "",
       },
       form: {
         chopper_code: "",
@@ -244,6 +306,9 @@ export default {
       maintenanceList: [],
       totalCount: 0,
       chopperList: [],
+      importModalVisible: false,
+      importFile: "",
+      
     };
   },
   mounted() {
@@ -292,6 +357,61 @@ export default {
     },
   },
   methods: {
+    exportRecords() {
+      const start_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[0]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const end_time = this.searchCondition.time
+          ? dayjs(this.searchCondition.time[1]).format("YYYY-MM-DD hh:mm")
+          : null;
+        const chopper_code = this.searchCondition.chopper_code;
+      exportMaintenanceWithCondition({
+        start_time,
+        end_time,
+        chopper_code
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        link.setAttribute("download", "导出文件.xlsx");
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理创建的 URL 对象
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      })
+    },
+    async confirmUploadFile() {
+      const formData = new FormData();
+      formData.append("file", this.importFile);
+      await importFileUpload(formData);
+      this.importModalVisible = false;
+      this.currentPage = 1;
+      this.getMaintenanceList();
+    },
+    async onFileChange(file, fileList) {
+      this.importFile = file.raw;
+    },
+    downloadFile() {
+      downloadExampleFile().then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response]));
+        const link = document.createElement("a");
+        link.href = url;
+
+        link.setAttribute("download", "示例文件.xlsx");
+        document.body.appendChild(link);
+        link.click();
+
+        // 清理创建的 URL 对象
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+      });
+    },
+    handleImport() {
+      this.importModalVisible = true;
+    },
     async fetchChopperList() {
       const res = await getChopperList({
         page: 1,

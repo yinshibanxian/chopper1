@@ -16,7 +16,7 @@ export function getOperationAndMaintenanceList({
       chopper_code,
       sort,
       start_time,
-      end_time
+      end_time,
     },
   });
 }
@@ -78,10 +78,45 @@ export function updateOperationAndMainTenance({
   });
 }
 
-
 export function deleteOperationAndMaintenance({ id }) {
-    return request({
-        url: `/operationAndMaintenance/${id}/`,
-        method: 'delete'
-    })
+  return request({
+    url: `/operationAndMaintenance/${id}/`,
+    method: "delete",
+  });
+}
+
+export function downloadExampleFile() {
+  return request({
+    url: "/operationAndMaintenance/export/",
+    method: "get",
+    responseType: "blob",
+  });
+}
+
+export function importFileUpload(data) {
+  return request({
+    url: "/operationAndMaintenance/import/",
+    method: "post",
+    data,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
+export function exportMaintenanceWithCondition({
+  start_time,
+  end_time,
+  chopper_code,
+}) {
+  return request({
+    url: "/operationAndMaintenance/export/",
+    method: "get",
+    params: {
+      start_time,
+      end_time,
+      chopper_code,
+    },
+    responseType: "blob",
+  });
 }
