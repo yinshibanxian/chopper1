@@ -625,7 +625,6 @@ $design_height: 1080;
               color: #f5a623;
             }
           }
-
           .sub-status-desc {
             line-height: 16px;
             font-weight: 400;

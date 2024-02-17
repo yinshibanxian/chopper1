@@ -20,7 +20,7 @@ export function getChopperHistoryData({
     url: '/data/',
     method: 'get',
     params: {
-      chopper_standard_id: chopper_standard_id_list,
+      chopper_standard_id_list: chopper_standard_id_list,
       start_time,
       end_time
     }
