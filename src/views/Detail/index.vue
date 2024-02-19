@@ -10,106 +10,104 @@
           {{ refreshCurrenTime }}
         </div>
         <div class="filter">
-          <el-select placeholder="" popper-class="filter-popper" value="24h" class="custom-select">
-            <el-option value="24h">24h</el-option>
+          <el-select placeholder="" popper-class="filter-popper" value="24h" class="custom-select" v-model="time">
+            <el-option v-for="item in timeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
           </el-select>
         </div>
         <div class="exit-img"></div>
       </div>
     </div>
-    <div class="body">
-      <div class="chopper-status-wrapper">
-        <div class="chopper-main-status">
-          <div class="title">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}状态监测</div>
-          <div class="main-status">
-            <div class="main-status-item">
-              <div class="status">正常</div>
-              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}是否启动</div>
+    <div class="body" >
+      <div v-if="loading" style="display: flex;justify-content: center;align-items: center;height: 100%;width: 100%;color:#00f2ff">数据加载中，请耐心等待</div>
+      <div v-if="!loading">
+        <div class="chopper-status-wrapper">
+          <div class="chopper-main-status">
+            <div class="title">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}状态监测</div>
+            <div class="main-status">
+              <div class="main-status-item">
+                <div class="status">正常</div>
+                <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}是否启动</div>
+              </div>
+              <div class="main-status-item">
+                <div class="status">正常</div>
+                <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制是否达标</div>
+              </div>
+              <div class="main-status-item">
+                <div class="status">正常</div>
+                <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}电机电流报警</div>
+              </div>
+              <div class="main-status-item">
+                <div class="status">正常</div>
+                <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}振动报警</div>
+              </div>
+              <div class="main-status-item">
+                <div class="status" style="color: red">故障</div>
+                <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}超差报警</div>
+              </div>
+              <div class="main-status-item">
+                <div class="status" style="color: #f5a623">异常</div>
+                <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}其他报警</div>
+              </div>
             </div>
-            <div class="main-status-item">
-              <div class="status">正常</div>
-              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制是否达标</div>
+          </div>
+          <div class="chopper-sub-status">
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">26</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定速度</div>
             </div>
-            <div class="main-status-item">
-              <div class="status">正常</div>
-              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}电机电流报警</div>
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">7722μs</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定相位</div>
             </div>
-            <div class="main-status-item">
-              <div class="status">正常</div>
-              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}振动报警</div>
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">7721μs</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}实际相位</div>
             </div>
-            <div class="main-status-item">
-              <div class="status" style="color: red">故障</div>
-              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}超差报警</div>
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">3.20°</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定TDC角度</div>
             </div>
-            <div class="main-status-item">
-              <div class="status" style="color: #f5a623">异常</div>
-              <div class="status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}其他报警</div>
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">100.0%</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制达标百分比</div>
+            </div>
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">0.15A</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}电机电流</div>
+            </div>
+            <div class="chopper-sub-status-item">
+              <div class="sub-status-num">26</div>
+              <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定速度</div>
             </div>
           </div>
         </div>
-        <div class="chopper-sub-status">
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">26</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定速度</div>
+        <!-- <div class="chopper-statistic">
+          <div class="title">数据统计</div>
+          <div class="charts-wrapper">
+            <div class="chart-wrapper" id="chart4"></div>
+            <div class="chart-wrapper" id="chart5"></div>
           </div>
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">7722μs</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定相位</div>
+        </div> -->
+        <div class="chopper-trend-wrapper">
+          <div class="title">
+            <div>趋势分析</div>
+            <div class="filter" v-if="type === 'last-node'">
+              <el-select
+                placeholder=""
+                popper-class="filter-popper"
+                value="斩波器1"
+                class="custom-select"
+              >
+                <el-option value="斩波器1">斩波器1</el-option>
+                <el-option value="斩波器1">斩波器2</el-option>
+                <el-option value="斩波器1">斩波器3</el-option>
+                <el-option value="斩波器1">斩波器4</el-option>
+              </el-select>
+            </div>
           </div>
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">7721μs</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}实际相位</div>
+          <!-- <el-input class="test-input" placeholder="aa" style="z-index: 10000;background: #fff;"></el-input> -->
+          <div class="charts-wrapper" id="independent-charts-wrapper">
           </div>
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">3.20°</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定TDC角度</div>
-          </div>
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">100.0%</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}相位控制达标百分比</div>
-          </div>
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">0.15A</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}电机电流</div>
-          </div>
-          <div class="chopper-sub-status-item">
-            <div class="sub-status-num">26</div>
-            <div class="sub-status-desc">{{ type === 'last-node' ? '谱仪' : 'T1 斩波器' }}设定速度</div>
-          </div>
-        </div>
-      </div>
-      <div class="chopper-statistic">
-        <div class="title">数据统计</div>
-        <div class="charts-wrapper">
-          <div class="chart-wrapper" id="chart4"></div>
-          <div class="chart-wrapper" id="chart5"></div>
-        </div>
-      </div>
-      <div class="chopper-trend-wrapper">
-        <div class="title">
-          <div>趋势分析</div>
-          <div class="filter" v-if="type === 'last-node'">
-            <el-select
-              placeholder=""
-              popper-class="filter-popper"
-              value="斩波器1"
-               class="custom-select"
-            >
-              <el-option value="斩波器1">斩波器1</el-option>
-              <el-option value="斩波器1">斩波器2</el-option>
-              <el-option value="斩波器1">斩波器3</el-option>
-              <el-option value="斩波器1">斩波器4</el-option>
-            </el-select>
-          </div>
-        </div>
-      
-        <!-- <el-input class="test-input" placeholder="aa" style="z-index: 10000;background: #fff;"></el-input> -->
-        <div class="charts-wrapper">
-          <div class="chart-wrapper" id="chart1"></div>
-          <div class="chart-wrapper" id="chart2">
-          </div>
-          <div class="chart-wrapper" id="chart3"></div>
         </div>
       </div>
     </div>
@@ -118,6 +116,8 @@
 
 <script>
 import * as echarts from "echarts";
+import { getDetailData } from '@/api/detail';
+import dayjs from "dayjs";
 
 export default {
   mounted() {
@@ -127,11 +127,13 @@ export default {
     this.refreshCurrentTimeTimer = setInterval(() => {
       this.currentTime = this.$dayjs();
     }, 1000);
-    this.initChart("chart1");
-    this.initChart("chart2");
-    this.initChart("chart3");
-    this.initPieChart();
-    this.initBarChart();
+    this.fetchDetailData()
+    
+    // this.initChart("chart1");
+    // this.initChart("chart2");
+    // this.initChart("chart3");
+    // this.initPieChart();
+    // this.initBarChart();
   },
   computed: {
     refreshCurrenTime: function () {
@@ -152,6 +154,141 @@ export default {
     }
   },
   methods: {
+    async fetchDetailData() {
+      this.loading = true;
+      const endTime = new Date(Date.now() - 60 * 60 * 24 * 1000 * 400);
+      const startTime = endTime.getTime() - 60 * 60 * 24 * 1000 * 1000;
+      const res = await getDetailData({
+        chopper_code: this.id,
+        start_time: dayjs(startTime).format("YYYY-MM-DD hh:mm"),
+        end_time: dayjs(endTime).format("YYYY-MM-DD hh:mm")
+      });
+      const renderData = [];
+      console.log(res, 'res>>>');
+
+      Object.keys(res.data).forEach((standardId) => {
+        if (res.data[standardId].length) {
+          renderData.push({
+            standardId: standardId,
+            data: res.data[standardId],
+          });
+        }
+      });
+      this.renderData = renderData;
+      this.loading = false
+      setTimeout(() => {
+        this.renderIndependentChart();
+      }, 0)
+    },
+    renderIndependentChart() {
+      const independentChartWrapper = document.querySelector(
+        "#independent-charts-wrapper"
+      );
+      this.renderData.forEach((item) => {
+        const container = document.createElement("div");
+        container.id = item.standardId;
+        container.className = "split-chart";
+        container.style.width = "45vw";
+        container.style.height = "300px";
+        container.style.marginBottom = "12px";
+        container.style.marginRight = "12px";
+        independentChartWrapper.appendChild(container);
+        const xAxisData = item.data.map((_item) => _item.created_time);
+        const name =  item.standardId;
+        const seriesData = {
+          type: "line",
+          data: item.data.map((_item) => _item.value),
+          name,
+          smooth: true,
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: "rgba(139, 255, 151, .7)",
+              },
+              {
+                offset: 1,
+                color: "transparent",
+              },
+            ]),
+          },
+          lineStyle: {
+            color: "#3dc579",
+          },
+        };
+        const option = {
+          tooltip: {
+            trigger: "axis",
+            color: "#3dc579",
+          },
+          legend: {
+            show: true,
+            top: 24,
+            right: 0,
+            icon: "rect",
+            fontWeight: 400,
+            textStyle: {
+              color: "rgba(255, 255, 255, .65)",
+            },
+            itemStyle: {
+            color: "#3dc579",
+          },
+          },
+          xAxis: {
+            type: "category",
+            data: xAxisData,
+            axisLine: {
+              lineStyle: {
+                color: "#00B7FD",
+                opacity: 0.2,
+              },
+            },
+            axisTick: {
+              show: false,
+            },
+            axisLabel: {
+              color: "#fff",
+              opacity: 0.45,
+            },
+          },
+          yAxis: {
+            type: "value",
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: "#00B7FD",
+                opacity: 0.5,
+              },
+            },
+            axisLabel: {
+              color: "#fff",
+              opacity: 0.45,
+            },
+            splitLine: {
+              show: false,
+            },
+          },
+          series: seriesData,
+          dataZoom: [
+            {
+              type: "slider",
+              xAxisIndex: 0,
+              start: 0,
+              end: 100,
+              top: "93%", // 设置滑动条的位置
+            },
+          ],
+          grid: {
+            left: 0,
+            right: 0,
+            bottom: 0,
+            containLabel: true,
+          },
+        };
+        const chart = echarts.init(container);
+        chart.setOption(option);
+      });
+    },
     handleNavigateToHome() {
       this.$router.push({
         path: '/dashboard'
@@ -413,7 +550,28 @@ export default {
           min: 0,
           max: 30
         }
-      }
+      },
+      loading: false,
+      renderData: [],
+      time: '24h',
+      timeOptions: [
+        {
+          label: '24小时内',
+          value: '24h'
+        },
+        {
+          label: '3天内',
+          value: '3day'
+        },
+        {
+          label: '7天内',
+          value: '7day'
+        },
+        {
+          label: '一个月内',
+          value: '1month'
+        },
+      ]
     };
   },
 };
@@ -432,12 +590,13 @@ $design_height: 1080;
 }
 
 .container {
+  width: 100vw;
   .header {
     height: px2vh(88);
     display: flex;
     align-items: center;
     background: rgba(29, 67, 84, 1);
-    width: 100%;
+    width: 100vw;
     .header-left {
       flex: 1;
       height: 100%;
@@ -704,6 +863,17 @@ $design_height: 1080;
     }
   }
 }
+
+#independent-charts-wrapper {
+    width: 96vw;
+    display: flex;
+    flex-wrap: wrap;
+    .split-chart {
+      flex: 1;
+      height: 300px;
+      width: 32vw;
+    }
+  }
 </style>
 <style lang="scss">
 .custom-select {
